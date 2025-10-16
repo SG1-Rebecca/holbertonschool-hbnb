@@ -29,17 +29,17 @@ class Review(BaseModel):
         if not isinstance(self.text, str):
             raise ValueError("Text must be a string")
         
-    def validate_rating(rating):
+    def validate_rating(self):
         """
         """
-        if not isinstance(rating, int) or rating < Review.MIN_RATING or rating > Review.MAX_RATING:
-            raise ValueError("Rating must be an integer between 1 and 5")
+        if not isinstance(self.rating, int) or self.rating < self.MIN_RATING or self.rating > self.MAX_RATING:
+            raise ValueError(f"Rating must be an integer between {self.MIN_RATING} and {self.MAX_RATING}")
         
-    def validate_place(place):
+    def validate_place(self):
         """
         Check if place is a Place instance.
         """
-        if not isinstance(place, Place):
+        if not isinstance(self.place, Place):
             raise ValueError("place must be a valid instance of Place")
         
     def validate_user(user):
