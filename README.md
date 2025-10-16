@@ -2,9 +2,11 @@
 
 A simplified version of an AirBnB-like application
 
-# 🛠️ Writing in Progress  
+## Table of contents
+### 🛠️ Writing in Progress  
 
-- [HBNB - UML](https://github.com/ValentinDLC/holbertonschool-hbnb/tree/main/part1)
+- [HBNB - UML](https://github.com/SG1-Rebecca/holbertonschool-hbnb/tree/main/part1)
+- [HBNB - BL & API](https://github.com/SG1-Rebecca/holbertonschool-hbnb/tree/main/part2)
 
 Writing in progress as each stage of the project progresses 🚀  
 
@@ -13,5 +15,3 @@ Writing in progress as each stage of the project progresses 🚀
 
 - [Jeany](https://github.com/SabyJeany)
 - [Rebecca](https://github.com/SG1-Rebecca)
-- [Valentin](https://github.com/ValentinDLC)
-a
