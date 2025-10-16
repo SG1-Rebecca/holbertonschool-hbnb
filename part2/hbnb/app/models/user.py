@@ -36,7 +36,7 @@ class User(BaseModel):
         if len(self.first_name) > 50:
             raise ValueError("The first name must have a maximum length of 50 characters")
         
-        if not isinstance(self.last_name_name, str):
+        if not isinstance(self.last_name, str):
             raise TypeError("The last name must be an string")
 
         if len(self.last_name) > 50:
@@ -60,4 +60,9 @@ class User(BaseModel):
     def validate_password(self):
         """
         """
+        if not isinstance(self.password, str):
+            raise TypeError("Password must be a string")
+        
+        if len(self.password) < 8:
+            raise ValueError("Password must be at least 8 characters long")
 
