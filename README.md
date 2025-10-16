@@ -14,4 +14,3 @@ Writing in progress as each stage of the project progresses 🚀
 - [Jeany](https://github.com/SabyJeany)
 - [Rebecca](https://github.com/SG1-Rebecca)
 - [Valentin](https://github.com/ValentinDLC)
-a
