@@ -23,10 +23,10 @@ class Review(BaseModel):
         self.place = place
         self.user = user
 
-    def validate_text(text):
+    def validate_text(self):
         """
         """
-        if not isinstance(text, str):
+        if not isinstance(self.text, str):
             raise ValueError("Text must be a string")
         
     def validate_rating(rating):
