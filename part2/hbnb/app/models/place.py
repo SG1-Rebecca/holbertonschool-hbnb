@@ -1,5 +1,5 @@
-from base_model import BaseModel
-from user import User
+from app.models.base_model import BaseModel
+from app.models.user import User
 
 
 class Place(BaseModel):
@@ -25,6 +25,8 @@ class Place(BaseModel):
         self.latitude = latitude
         self.longitude = longitude
         self.owner = owner
+        self.reviews = []
+        self.amenities = []
 
     def validate_title(self):
         """
@@ -55,7 +57,6 @@ class Place(BaseModel):
         if self.price <= 0:
             raise ValueError("The price must be a positive value")
 
-
     def validate_latitude(self):
         """
         Validate the latitude of the place.
@@ -83,7 +84,7 @@ class Place(BaseModel):
         if not isinstance(self.owner, User):
             raise TypeError("The owner must be an instance of User")
 
-    def is_owner(self):
+    def is_owner(self, user):
         """
         Check if the user is the owner of the place.
 
@@ -91,3 +92,15 @@ class Place(BaseModel):
             bool: True if the user is the owner, False otherwise.
         """
         return self.owner == user
+
+    def add_review(self, review):
+        """
+        Add a review to the place.
+        """
+        self.reviews.append(review)
+
+    def add_amenity(self, amenity):
+        """
+        Add an amenity to the place.
+        """
+        self.amenities.append(amenity)
