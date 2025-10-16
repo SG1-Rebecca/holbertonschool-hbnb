@@ -27,12 +27,12 @@ class Review(BaseModel):
         """
         """
         if not isinstance(text, str):
-            raise ValueError("")
+            raise ValueError("Text must be a string")
         
     def validate_rating(rating):
         """
         """
-        if not isinstance(rating, int) or rating < MIN_RATING or rating > MAX_RATING:
+        if not isinstance(rating, int) or rating < Review.MIN_RATING or rating > Review.MAX_RATING:
             raise ValueError("Rating must be an integer between 1 and 5")
         
     def validate_place(place):
