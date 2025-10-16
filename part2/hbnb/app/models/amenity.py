@@ -16,7 +16,7 @@ class Amenity(BaseModel):
             raise TypeError("The name of the amenity must be a string")
 
         if len(self.name) > 50:
-            raise ValueError("The name of the amenity must no exceed 50 characters.")
+            raise ValueError("The name of the amenity must not exceed 50 characters.")
 
         if len(self.name) == 0:
             raise ValueError("The name of the amenity cannot be empty")
