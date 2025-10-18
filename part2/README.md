@@ -80,3 +80,59 @@ pip install flask-restx
   python run.py
 ```
 
+## Business Logic Layer
+
+### Entities and their responsibilities
+
+1. **User** : Represents a user of the platform (owner or tenant).
+
+    **Responsibilities:**
+
+    - Name validation
+    - Email format validation
+    - Ensuring email uniqueness
+    - Linking with created places and reviews
+
+
+2. **Place** : Represents a place available to rental
+
+    **Responsibilities:**
+
+    - Text Validation
+    - Rating Validation
+    - Living Space Validation
+    - Validate user ownership
+    - Business Rules
+    - Timestamp Management
+
+
+3. **Review** : Represents a review left by a user on a Place.
+
+    **Responsabilities:**
+
+    - Validating the rating
+    - Verifying the existence of the user and the property
+    - Prevent a property owner from rating their own property
+    - Timestamp Management
+
+
+
+4. **Amenity** : Represents a feature or service associated with one or more places
+
+    **Responsibilities:**
+
+    - Validate name.
+    - Manage many-to-many associations with places.
+    - Timestamp Management
+
+
+## Relationships Between Entities
+
+
+User <-> Place : One-To-Many
+
+User <-> Review : One-To-Many
+
+Place <-> Review : One-To-Many
+
+Place <-> Amenity : Many-To-Many
