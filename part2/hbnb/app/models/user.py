@@ -1,4 +1,4 @@
-from base_model import BaseModel
+from app.models.base_model import BaseModel
 
 
 class User(BaseModel):
@@ -26,6 +26,7 @@ class User(BaseModel):
 
     def validate_name(self):
         """
+        Validate the format of the first and last names.
         """
         if not isinstance(self.first_name, str):
             raise TypeError("The first name must be an string")
@@ -44,7 +45,7 @@ class User(BaseModel):
         Validate the email format.
         """
         if self.email.count("@") != 1:
-            raise ValueError("")
+            raise ValueError("Email must contain exactly one '@' character")
         
         recipient, domain = self.email.split("@")
 
@@ -52,3 +53,13 @@ class User(BaseModel):
             raise ValueError("Email must have both recipient and domain parts")
         
 
+    def to_dict(self):
+        """
+        Convert the User instance to a dictionary.
+        """
+        user_dict = super().to_dict()
+        user_dict.update({
+            'first_name': self.first_name,
+            'last_name': self.last_name,
+        })
+        return user_dict
