@@ -1,7 +1,7 @@
 from flask_restx import Namespace, Resource, fields
-from app.services import facade
+from app.services.facade import facade
 
-api = Namespace('users', description='User operations')
+api = Namespace('users', description='User operations', path='/')
 
 # Define the user model for input validation and documentation
 user_model = api.model('User', {
@@ -27,6 +27,14 @@ class UserList(Resource):
 
         new_user = facade.create_user(user_data)
         return {'id': new_user.id, 'first_name': new_user.first_name, 'last_name': new_user.last_name, 'email': new_user.email}, 201
+
+    @api.response(200, 'List of users retrieved successfully')
+    def get(self):
+        """
+        Get the lists of users
+        """
+        user_list = facade.get_all_users()
+        return [user.to_dict() for user in user_list], 200
 
 @api.route('/<user_id>')
 class UserResource(Resource):
