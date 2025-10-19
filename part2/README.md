@@ -8,32 +8,59 @@ This project
 ```plaintext
 hbnb/
 ├── app/
-│   ├── __init__.py
+│   ├── __init__.py              
 │   ├── api/
-│   │   ├── __init__.py
+│   │   ├── __init__.py          
 │   │   ├── v1/
-│   │       ├── __init__.py
-│   │       ├── users.py
-│   │       ├── places.py
-│   │       ├── reviews.py
-│   │       ├── amenities.py
+│   │       ├── __init__.py      
+│   │       ├── users.py         
+│   │       ├── places.py        
+│   │       ├── reviews.py       
+│   │       ├── amenities.py     
 │   ├── models/
-│   │   ├── __init__.py
-│   │   ├── user.py
-│   │   ├── place.py
-│   │   ├── review.py
-│   │   ├── amenity.py
+│   │   ├── __init__.py          
+│   │   ├── user.py              
+│   │   ├── place.py             
+│   │   ├── review.py            
+│   │   ├── amenity.py           
 │   ├── services/
-│   │   ├── __init__.py
-│   │   ├── facade.py
+│   │   ├── __init__.py          
+│   │   ├── facade.py            
 │   ├── persistence/
-│       ├── __init__.py
-│       ├── repository.py
-├── run.py
-├── config.py
-├── requirements.txt
-├── README.md
+│       ├── __init__.py          
+│       ├── repository.py        
+├── test/
+|   ├── __init__.py
+│   ├── test_models/             
+│   ├── test_api/                
+├── run.py                       
+├── config.py                    
+├── requirements.txt             
+└── README.md                    
 ```
+
+## Directory and file purpose
+
+An empty __init__.py file is created in each directory that is intended to be a Python package.
+This tells Python to treat these directories as importable packages.
+
+
+- `app/` : Contains the core application code.
+
+- `api/` : API endpoints, organized by version (v1/).
+
+- `models/` : Contains business logic classes.
+
+- `services/` : Facade pattern implementation, managing layer interactions.
+
+- `persistence/` : In-memory repository.
+
+- `test/` : Unit and integration tests.
+
+- `run.py`: The entry point for running the Flask application.
+- `config.py`: Configuration of environment variables and application settings.
+- `requirements.txt`: List all the Python packages needed for the project.
+
 ## Instructions
 
 ### 1. Clone the project
