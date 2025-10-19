@@ -67,7 +67,7 @@ This tells Python to treat these directories as importable packages.
 ### 1. Clone the project
 
 ```bash
-  git clone https://github.com/ValentinDLC/holbertonschool-hbnb.git
+  git clone https://github.com/SG1-Rebecca/holbertonschool-hbnb
 ```
 
 ### 2. Go to the project directory
