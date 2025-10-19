@@ -18,7 +18,8 @@ hbnb/
 │   │       ├── reviews.py       
 │   │       ├── amenities.py     
 │   ├── models/
-│   │   ├── __init__.py          
+│   │   ├── __init__.py
+|   |   ├── base_model.py      
 │   │   ├── user.py              
 │   │   ├── place.py             
 │   │   ├── review.py            
