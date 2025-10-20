@@ -1,6 +1,7 @@
 from app.persistence.repository import InMemoryRepository
 from app.models.user import User
 from app.models.place import Place
+from app.models.review import Review
 
 
 class HBnBFacade:
@@ -31,8 +32,8 @@ class HBnBFacade:
                     raise ValueError("Email already registered")
             user.update(user_data)
         return user
-# Places
 
+# Places
     def create_place(self, place_data):
         # Placeholder for logic to create a place, including validation for price, latitude, and longitude
         place = Place(**place_data)
@@ -59,5 +60,30 @@ class HBnBFacade:
                 place.longitude = place_data['longitude']
             place.update(place_data)
         return place
+
+# Reviews
+    def create_review(self, review_data):
+        # Placeholder for logic to create a review, including validation for user_id, place_id, and rating
+        pass
+
+    def get_review(self, review_id):
+        # Placeholder for logic to retrieve a review by ID
+        pass
+
+    def get_all_reviews(self):
+        # Placeholder for logic to retrieve all reviews
+        pass
+
+    def get_reviews_by_place(self, place_id):
+        # Placeholder for logic to retrieve all reviews for a specific place
+        pass
+
+    def update_review(self, review_id, review_data):
+        # Placeholder for logic to update a review
+        pass
+
+    def delete_review(self, review_id):
+        # Placeholder for logic to delete a review
+        pass
 
 facade = HBnBFacade()
