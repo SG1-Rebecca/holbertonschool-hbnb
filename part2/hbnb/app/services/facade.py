@@ -35,18 +35,29 @@ class HBnBFacade:
 
     def create_place(self, place_data):
         # Placeholder for logic to create a place, including validation for price, latitude, and longitude
-        pass
+        place = Place(**place_data)
+        self.place_repo.add(place)
+        return place
 
     def get_place(self, place_id):
-        # Placeholder for logic to retrieve a place by ID, including associated owner and amenities
-        pass
+        return self.place_repo.get(place_id)
 
     def get_all_places(self):
-        # Placeholder for logic to retrieve all places
-        pass
+        return self.place_repo.get_all()
 
     def update_place(self, place_id, place_data):
-        # Placeholder for logic to update a place
-        pass
+        place = self.place_repo.get(place_id)
+        if place:
+            #update price
+            if 'price' in place_data and place_data['price'] != place.price:
+                place.price = place_data['price']
+            #update latitude
+            if 'latitude' in place_data and place_data['latitude'] != place.latitude:
+                place.latitude = place_data['latitude']
+            #update longitude
+            if 'longitude' in place_data and place_data['longitude'] != place.longitude:
+                place.longitude = place_data['longitude']
+            place.update(place_data)
+        return place
 
 facade = HBnBFacade()
