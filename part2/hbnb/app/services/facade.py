@@ -22,6 +22,15 @@ class HBnBFacade:
     def get_all_users(self):
         return self.user_repo.get_all()
 
+    def update_user(self, user_id, user_data):
+        user = self.user_repo.get(user_id)
+        if user:
+            if 'email' in user_data and user_data['email'] != user.email:
+                user_exist = self.get_user_by_email(user_data['email'])
+                if user_exist:
+                    raise ValueError("Email already registered")
+            user.update(user_data)
+        return user
 # Places
 
     def create_place(self, place_data):
