@@ -2,6 +2,7 @@ from app.persistence.repository import InMemoryRepository
 from app.models.user import User
 from app.models.place import Place
 from app.models.review import Review
+from app.models.amenity import Amenity
 
 
 class HBnBFacade:
@@ -87,6 +88,23 @@ class HBnBFacade:
 
     def delete_review(self, review_id):
         # Placeholder for logic to delete a review
+        pass
+
+#Amenity
+    def create_amenity(self, amenity_data):
+        # Placeholder for logic to create an amenity
+        pass
+
+    def get_amenity(self, amenity_id):
+        # Placeholder for logic to retrieve an amenity by ID
+        pass
+
+    def get_all_amenities(self):
+        # Placeholder for logic to retrieve all amenities
+        pass
+
+    def update_amenity(self, amenity_id, amenity_data):
+        # Placeholder for logic to update an amenity
         pass
 
 facade = HBnBFacade()
