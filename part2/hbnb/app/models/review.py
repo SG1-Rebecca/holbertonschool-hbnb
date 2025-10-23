@@ -23,31 +23,53 @@ class Review(BaseModel):
         self.rating = rating
         self.place = place
         self.user = user
+        self.validate()
 
-    def validate_text(self):
+    def validate(self):
+        """
+        Validate the review instance.
+        """
+        self._validate_text()
+        self._validate_rating()
+        self._validate_place()
+        self._validate_user(self.user)
+
+    def _validate_text(self):
         """
         Validate the format of the review text.
         """
         if not isinstance(self.text, str):
             raise ValueError("Text must be a string")
+        if not self.text.strip():
+            raise ValueError("Text cannot be empty")
         
-    def validate_rating(self):
+    def _validate_rating(self):
         """
         Validate the format and rating of the review.
         """
         if not isinstance(self.rating, int) or self.rating < self.MIN_RATING or self.rating > self.MAX_RATING:
             raise ValueError(f"Rating must be an integer between {self.MIN_RATING} and {self.MAX_RATING}")
         
-    def validate_place(self):
+    def _validate_place(self):
         """
         Check if place is a Place instance.
         """
         if not isinstance(self.place, Place):
             raise ValueError("place must be a valid instance of Place")
         
-    def validate_user(self, user):
+    def _validate_user(self, user):
         """
         Check if user is a User instance.
         """
         if not isinstance(user, User):
             raise ValueError("user must be a valid instance of User")
+
+    def to_dict(self):
+        review_dict = super().to_dict()
+        review_dict.update({
+            'text': self.text,
+            'rating': self.rating,
+            'place_id': self.place.id if self.place else None,
+            'user_id': self.user.id if self.user else None
+        })
+        return review_dict
