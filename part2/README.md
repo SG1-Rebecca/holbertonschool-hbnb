@@ -1,7 +1,8 @@
 
 # HBnB - Business Logic & API 
 
-This project
+This project implements the **Business Logic Layer** and **RESTful API** of the HBnB platform, building upon the system architecture defined in the UML diagram from Part 1.
+
 
 ## Structure
 
@@ -62,7 +63,7 @@ This tells Python to treat these directories as importable packages.
 - `config.py`: Configuration of environment variables and application settings.
 - `requirements.txt`: List all the Python packages needed for the project.
 
-## Instructions
+## Installation & Instructions
 
 ### 1. Clone the project
 
@@ -164,3 +165,11 @@ User <-> Review : One-To-Many
 Place <-> Review : One-To-Many
 
 Place <-> Amenity : Many-To-Many
+
+## Testing with unittest
+
+To run all tests from the project root:
+
+```python
+python -m unittest discover
+```
