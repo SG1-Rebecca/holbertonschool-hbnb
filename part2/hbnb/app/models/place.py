@@ -39,8 +39,8 @@ class Place(BaseModel):
         if not isinstance(self.title, str):
             raise TypeError("The title must be a string")
 
-        if len(self.title) > 100:
-            raise ValueError("The title of the place must have a maximum length of 100 character")
+        if len(self.title) > self.TITLE_MAX_LENGTH:
+            raise ValueError(f"The title of the place must have a maximum length of {self.TITLE_MAX_LENGTH} character")
 
         if not self.title.strip():
             raise ValueError("The title must be a non-empty string")
