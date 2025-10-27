@@ -1,11 +1,11 @@
 from app.models.base_model import BaseModel
 import re
 
+
 class User(BaseModel):
     """
     User class that inherits from BaseModel.
     """
-    PERMITS = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789._'
 
     def __init__(self, email, first_name, last_name, is_admin=False):
         """
@@ -14,7 +14,6 @@ class User(BaseModel):
 
         Args:
             email (str): The user's email address.
-            password (str): The user's password.
             first_name (str): The user's first name.
             last_name (str): The user's last name.
             is_admin (bool): Indicates if the user has admin privileges.
@@ -26,7 +25,7 @@ class User(BaseModel):
         self.last_name = last_name
         self.is_admin = is_admin
         self.validate()
-    
+
     def validate(self):
         """
         Validate the user attributes.
@@ -63,10 +62,9 @@ class User(BaseModel):
         pattern = r'^[a-zA-Z0-9._]+@[a-zA-Z0-9._]+\.[a-zA-Z]{2,}$'
         if not isinstance(self.email, str):
             raise TypeError("Email must be a string")
-        
+
         if not self.email.strip():
             raise ValueError("Email must be a non-empty string")
-        
+
         if not re.match(pattern, self.email):
             raise ValueError("Invalid email format")
-
