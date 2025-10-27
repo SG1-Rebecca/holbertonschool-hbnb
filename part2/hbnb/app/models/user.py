@@ -1,5 +1,5 @@
 from app.models.base_model import BaseModel
-
+import re
 
 class User(BaseModel):
     """
