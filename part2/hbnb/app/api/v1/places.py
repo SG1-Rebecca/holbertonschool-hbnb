@@ -1,7 +1,7 @@
 from flask_restx import Namespace, Resource, fields
-from app.services import facade
+from app.services.facade import facade
 
-api = Namespace('places', description='Place operations')
+api = Namespace('places', description='Place operations', path='/')
 
 # Define the models for related entities
 amenity_model = api.model('PlaceAmenity', {
@@ -34,14 +34,34 @@ class PlaceList(Resource):
     @api.response(400, 'Invalid input data')
     def post(self):
         """Register a new place"""
+        place_data = api.payload
         # Placeholder for the logic to register a new place
-        pass
+        new_place = facade.create_place(place_data)
+        return {
+            'id': new_place.id,
+            'title': new_place.title,
+            'description': new_place.description,
+            'price': new_place.price,
+            'latitude': new_place.latitude,
+            'longitude': new_place.longitude,
+            'owner_id': new_place.owner,
+            'amemnities': [amenity.id for amenity in new_place.amenities]
+        }
 
     @api.response(200, 'List of places retrieved successfully')
     def get(self):
         """Retrieve a list of all places"""
-        # Placeholder for logic to return a list of all places
-        pass
+        place_list = facade.get_all_places()
+        return [{
+            'id': place.id,
+            'title': place.title,
+            'description': place.description,
+            'price': place.price,
+            'latitude': place.latitude,
+            'longitude': place.longitude,
+            'owner_id': place.owner.id,
+            'amenities': [amenity.id for amenity in place.amenities]
+        } for place in place_list], 200
 
 @api.route('/<place_id>')
 class PlaceResource(Resource):
@@ -50,7 +70,24 @@ class PlaceResource(Resource):
     def get(self, place_id):
         """Get place details by ID"""
         # Placeholder for the logic to retrieve a place by ID, including associated owner and amenities
-        pass
+        place = facade.get_place(place_id)
+        if not place:
+            return {'error': 'Place not found'}, 404
+        return {'id': place.id,
+                'title': place.title,
+                'description': place.description,
+                'price': place.price,
+                'latitude': place.latitude,
+                'longitude': place.longitude,
+                'owner': {
+                    'id': place.owner.id,
+                    'first_name': place.owner.first_name,
+                    'last_name': place.owner.last_name,
+                    'email': place.owner.email
+                },
+                'amenities': [{'id': amenity.id, 'name': amenity.name} for amenity in place.amenities]
+               }, 200
+
 
     @api.expect(place_model)
     @api.response(200, 'Place updated successfully')

@@ -31,8 +31,6 @@ class Review(BaseModel):
         """
         self._validate_text()
         self._validate_rating()
-        self._validate_place()
-        self._validate_user(self.user)
 
     def _validate_text(self):
         """

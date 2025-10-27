@@ -27,6 +27,18 @@ class Place(BaseModel):
         self.owner = owner
         self.reviews = []
         self.amenities = []
+        self.validate()
+
+    def validate(self):
+        """
+        Validate the attributes of the Place instance.
+        """
+        self.validate_title()
+        self.validate_description()
+        self.validate_price()
+        self.validate_latitude()
+        self.validate_longitude()
+        self.validate_owner()
 
     def validate_title(self):
         """
@@ -104,3 +116,19 @@ class Place(BaseModel):
         Add an amenity to the place.
         """
         self.amenities.append(amenity)
+
+    def to_dict(self):
+        """
+        Convert the Place instance to a dictionary
+        """
+        place_dict = super().to_dict()
+        place_dict.update({
+            'title': self.title,
+            'description': self.description,
+            'price': self.price,
+            'latitude': self.latitude,
+            'longitude': self.longitude,
+            'owner_id': self.owner.id,
+            'amenities': [amenity.id for amenity in self.amenities]
+        })
+        return place_dict
