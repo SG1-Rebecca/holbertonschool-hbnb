@@ -104,14 +104,19 @@ class Place(BaseModel):
         """
         Validate that the owner is a User instance and exists.
         """
+        if self.owner is None:
+            raise ValueError("Owner is required for a place")
+
         if not isinstance(self.owner, User):
             raise TypeError("The owner must be an instance of User")
 
-    def is_owner(self):
+    def is_owner(self, user):
         """
         Check if the user is the owner of the place.
 
         Return:
-            bool: True if the user is the owner, False otherwise.
+            string: The ID of the owner if the user is the owner.
         """
-        return self.owner == user
+        if not isinstance(user, User):
+            raise TypeError("The user must be an instance of User")
+        return self.owner.id == user.id
