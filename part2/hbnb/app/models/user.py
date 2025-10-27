@@ -68,3 +68,15 @@ class User(BaseModel):
 
         if not re.match(pattern, self.email):
             raise ValueError("Invalid email format")
+
+    def to_dict(self):
+        """
+        Convert the User instance to a dictionary.
+        """
+        user_dict = super().to_dict()
+        user_dict.update({
+            'first_name': self.first_name.strip(),
+            'last_name': self.last_name.strip(),
+            'email': self.email.strip()
+        })
+        return user_dict
