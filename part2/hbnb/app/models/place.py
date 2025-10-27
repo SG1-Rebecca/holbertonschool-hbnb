@@ -70,25 +70,35 @@ class Place(BaseModel):
             raise ValueError("The price must be a positive value")
 
 
-    def validate_latitude(self):
+    def validate_coordinates(self):
         """
-        Validate the latitude of the place.
+        Validate the latitude and longitude of the place.
         """
+        # Validate latitude
+        if isinstance(self.latitude, int):
+            self.latitude = float(self.latitude)
+
+        if self.latitude is None:
+            raise ValueError("Latitude is required for a place")
+
         if not isinstance(self.latitude, float):
             raise TypeError("Latitude must be a float")
 
-        if self.latitude < -90.0 or self.latitude > 90.0:
-            raise ValueError("Latitude must be within the range of -90.0 to 90.0")
+        if self.latitude < self.LATITUDE_MIN or self.latitude > self.LATITUDE_MAX:
+            raise ValueError(f"Latitude must be within the range of {self.LATITUDE_MIN} to {self.LATITUDE_MAX}")
 
-    def validate_longitude(self):
-        """
-        Validate the longitude of the place.
-        """
+        # Validate longitude
+        if isinstance(self.longitude, int):
+            self.longitude = float(self.longitude)
+
+        if self.longitude is None:
+            raise ValueError("Longitude is required for a place")
+
         if not isinstance(self.longitude, float):
             raise TypeError("Longitude must be a float")
 
-        if self.longitude < -180.0 or self.longitude > 180.0:
-            raise ValueError("Longitude must be within the range of -180.0 to 180.0")
+        if self.longitude < self.LONGITUDE_MIN or self.longitude > self.LONGITUDE_MAX:
+            raise ValueError(f"Longitude must be within the range of {self.LONGITUDE_MIN} to {self.LONGITUDE_MAX}")
 
     def validate_owner(self):
         """
