@@ -25,6 +25,14 @@ class User(BaseModel):
         self.first_name = first_name
         self.last_name = last_name
         self.is_admin = is_admin
+        self.validate()
+    
+    def validate(self):
+        """
+        Validate the user attributes.
+        """
+        self.validate_email()
+        self.validate_name()
 
     def validate_name(self):
         """
