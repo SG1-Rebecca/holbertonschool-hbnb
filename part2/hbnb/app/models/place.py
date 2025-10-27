@@ -51,7 +51,9 @@ class Place(BaseModel):
         """
         if self.description is not None and not isinstance(self.description, str):
             raise TypeError("Description must be a string or None")
-        
+
+        if isinstance(self.description, str) and len(self.description) > self.DESC_MAX_LENGTH:
+            raise ValueError(f"Description must be less than {self.DESC_MAX_LENGTH} characters")
 
     def validate_price(self):
         """
