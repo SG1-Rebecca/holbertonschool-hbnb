@@ -6,6 +6,12 @@ class Place(BaseModel):
     """
     Place class that inherits from BaseModel.
     """
+    TITLE_MAX_LENGTH = 100
+    DESC_MAX_LENGTH = 1500
+    LATITUDE_MIN = -90.0
+    LATITUDE_MAX = 90.0
+    LONGITUDE_MIN = -180.0
+    LONGITUDE_MAX = 180
     def __init__(self, title, description, price, latitude, longitude, owner):
         """
         Initialize a Place instance
@@ -36,8 +42,8 @@ class Place(BaseModel):
         if len(self.title) > 100:
             raise ValueError("The title of the place must have a maximum length of 100 character")
 
-        if len(self.title) == 0:
-            raise ValueError("The title cannot be empty")
+        if not self.title.strip():
+            raise ValueError("The title must be a non-empty string")
 
     def validate_description(self):
         """
