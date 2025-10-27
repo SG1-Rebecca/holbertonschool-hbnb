@@ -60,9 +60,13 @@ class Place(BaseModel):
         """
         Validate the price of the place.
         """
+        if self.price is None:
+            raise ValueError("Price is required for a place")
+
         if not isinstance(self.price, float):
             raise TypeError("The price must be a float")
-        if self.price <= 0:
+
+        if self.price <= self.PRICE_MIN_VALUE:
             raise ValueError("The price must be a positive value")
 
 
