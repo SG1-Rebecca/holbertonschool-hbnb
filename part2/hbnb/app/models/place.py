@@ -49,8 +49,9 @@ class Place(BaseModel):
         """
         Validate the description of the place.
         """
-        if not isinstance(self.description, str):
-            raise TypeError("Description must be a string")
+        if self.description is not None and not isinstance(self.description, str):
+            raise TypeError("Description must be a string or None")
+        
 
     def validate_price(self):
         """
