@@ -8,6 +8,7 @@ class Place(BaseModel):
     """
     TITLE_MAX_LENGTH = 100
     DESC_MAX_LENGTH = 1500
+    PRICE_MIN_VALUE = 0
     LATITUDE_MIN = -90.0
     LATITUDE_MAX = 90.0
     LONGITUDE_MIN = -180.0
