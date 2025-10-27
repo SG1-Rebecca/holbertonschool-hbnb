@@ -52,10 +52,13 @@ class User(BaseModel):
         """
         Validate the email format.
         """
-        if self.email.count("@") != 1:
-            raise ValueError("")
+        pattern = r'^[a-zA-Z0-9._]+@[a-zA-Z0-9._]+\.[a-zA-Z]{2,}$'
+        if not isinstance(self.email, str):
+            raise TypeError("Email must be a string")
         
-        recipient, domain = self.email.split("@")
+        if not self.email.strip():
+            raise ValueError("Email must be a non-empty string")
+        
+        if not re.match(pattern, self.email):
+            raise ValueError("Invalid email format")
 
-        if not recipient or not domain:
-            raise ValueError("Email must have both recipient and domain parts")
