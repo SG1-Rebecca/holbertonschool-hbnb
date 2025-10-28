@@ -33,13 +33,13 @@ class Review(BaseModel):
         if not self.text.strip():
             raise ValueError("Text cannot be empty")
 
-    def validate_rating(rating):
+    def validate_rating(self):
         """
         Validate the format and rating of the review
         """
-        if not isinstance(rating, int) or rating < Review.MIN_RATING or rating > Review.MAX_RATING:
-            raise ValueError("Rating must be an integer between 1 and 5")
-        
+        if not isinstance(self.rating, int) or self.rating < self.MIN_RATING or self.rating > self.MAX_RATING:
+            raise ValueError(f"Rating must be an integer between {self.MIN_RATING} and {self.MAX_RATING}")
+
     def validate_place(place):
         """
         Check if place is a Place instance.
