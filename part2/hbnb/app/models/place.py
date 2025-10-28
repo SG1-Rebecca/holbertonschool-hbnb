@@ -4,7 +4,7 @@ from app.models.user import User
 
 class Place(BaseModel):
     """
-    Place class that inherits from BaseModel.
+seModel.
     """
     TITLE_MAX_LENGTH = 100
     DESC_MAX_LENGTH = 1500
@@ -32,6 +32,8 @@ class Place(BaseModel):
         self.latitude = latitude
         self.longitude = longitude
         self.owner = owner
+        self.reviews = []
+        self.amenities = []
         self.validate()
 
     def validate(self):
@@ -73,7 +75,7 @@ class Place(BaseModel):
         """
         if self.price is None:
             raise ValueError("Price is required for a place")
-        
+
         if isinstance(self.price, int):
             self.price = float(self.price)
 
@@ -134,3 +136,11 @@ class Place(BaseModel):
         if not isinstance(user, User):
             raise TypeError("The user must be an instance of User")
         return self.owner.id == user.id
+    
+    def add_review(self, review):
+        """Add a review to the place."""
+        self.reviews.append(review)
+
+    def add_amenity(self, amenity):
+        """Add an amenity to the place."""
+        self.amenities.append(amenity)
