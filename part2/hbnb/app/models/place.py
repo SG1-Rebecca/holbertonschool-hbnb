@@ -12,7 +12,7 @@ class Place(BaseModel):
     LATITUDE_MIN = -90.0
     LATITUDE_MAX = 90.0
     LONGITUDE_MIN = -180.0
-    LONGITUDE_MAX = 180
+    LONGITUDE_MAX = 180.0
     def __init__(self, title, description, price, latitude, longitude, owner):
         """
         Initialize a Place instance
