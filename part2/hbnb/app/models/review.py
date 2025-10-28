@@ -35,6 +35,7 @@ class Review(BaseModel):
 
     def validate_rating(rating):
         """
+        Validate the format and rating of the review
         """
         if not isinstance(rating, int) or rating < Review.MIN_RATING or rating > Review.MAX_RATING:
             raise ValueError("Rating must be an integer between 1 and 5")
