@@ -25,10 +25,14 @@ class Review(BaseModel):
 
     def validate_text(self):
         """
+        Validate the format of the review text
         """
         if not isinstance(self.text, str):
             raise ValueError("Text must be a string")
-        
+
+        if not self.text.strip():
+            raise ValueError("Text cannot be empty")
+
     def validate_rating(rating):
         """
         """
