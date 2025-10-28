@@ -32,6 +32,17 @@ class Place(BaseModel):
         self.latitude = latitude
         self.longitude = longitude
         self.owner = owner
+        self.validate()
+
+    def validate(self):
+        """
+        Validate the attributes of the Place instance.
+        """
+        self.validate_title()
+        self.validate_description()
+        self.validate_price()
+        self.validate_coordinates()
+        self.validate_owner()
 
     def validate_title(self):
         """
