@@ -1,11 +1,16 @@
-from base_model import BaseModel
+from app.models.base_model import BaseModel
 
 class Amenity(BaseModel):
     """
+    Amenity class that inherits from BaseModel.
     """
     NAME_LENGTH_MAX = 50
     def __init__(self, name):
         """
+        Initialize an Amenity instance.
+
+        Args:
+            name (str): The name of the amenity 
         """
         super().__init__()
         self.name = name
