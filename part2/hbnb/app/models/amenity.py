@@ -3,6 +3,7 @@ from base_model import BaseModel
 class Amenity(BaseModel):
     """
     """
+    NAME_LENGTH_MAX = 50
     def __init__(self, name):
         """
         """
