@@ -23,6 +23,15 @@ class Review(BaseModel):
         self.place = place
         self.user = user
 
+    def validate(self):
+        """
+        Validate the attributes of the Review instance.
+        """
+        self.validate_text()
+        self.validate_rating()
+        self.validate_place()
+        self.validate_user()
+
     def validate_text(self):
         """
         Validate the format of the review text
