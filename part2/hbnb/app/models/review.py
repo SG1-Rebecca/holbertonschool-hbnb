@@ -40,16 +40,16 @@ class Review(BaseModel):
         if not isinstance(self.rating, int) or self.rating < self.MIN_RATING or self.rating > self.MAX_RATING:
             raise ValueError(f"Rating must be an integer between {self.MIN_RATING} and {self.MAX_RATING}")
 
-    def validate_place(place):
+    def validate_place(self):
         """
         Check if place is a Place instance.
         """
-        if not isinstance(place, Place):
+        if not isinstance(self.place, Place):
             raise ValueError("place must be a valid instance of Place")
-        
-    def validate_user(user):
+
+    def validate_user(self):
         """
         Check if user is a User instance.
         """
-        if not isinstance(user, User):
+        if not isinstance(self.user, User):
             raise ValueError("user must be a valid instance of User")
