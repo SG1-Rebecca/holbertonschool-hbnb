@@ -1,19 +1,19 @@
-from base_model import BaseModel
+from app.models.base_model import BaseModel
+import re
 
 
 class User(BaseModel):
     """
     User class that inherits from BaseModel.
     """
-    PERMITS = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789._'
-    def __init__(self, email, password, first_name, last_name, is_admin=False):
+
+    def __init__(self, email, first_name, last_name, is_admin=False):
         """
         Initialize a User instance with email, password, first name, last name,
         and admin status.
 
         Args:
             email (str): The user's email address.
-            password (str): The user's password.
             first_name (str): The user's first name.
             last_name (str): The user's last name.
             is_admin (bool): Indicates if the user has admin privileges.
@@ -21,43 +21,70 @@ class User(BaseModel):
         """
         super().__init__()
         self.email = email
-        self.password = password
         self.first_name = first_name
         self.last_name = last_name
         self.is_admin = is_admin
+        self.validate()
 
-        #TODO: hash password, print formationg, serialization, check format email, max length first and last name.
+    def validate(self):
+        """
+        Validate the user attributes.
+        """
+        self.validate_email()
+        self.validate_name()
+        self.validate_admin_status()
+
     def validate_name(self):
         """
+        Validate the format of the first and last names.
         """
         if not isinstance(self.first_name, str):
             raise TypeError("The first name must be an string")
 
-        if len(self.first_name) > 50:
+        if not self.first_name.strip():
+            raise ValueError("The first name must be a non-empty string")
+
+        if len(self.first_name.strip()) > 50:
             raise ValueError("The first name must have a maximum length of 50 characters")
-        
-        if not isinstance(self.last_name_name, str):
+
+        if not isinstance(self.last_name, str):
             raise TypeError("The last name must be an string")
 
-        if len(self.last_name) > 50:
+        if not self.last_name.strip():
+            raise ValueError("The last name must be a non-empty string")
+
+        if len(self.last_name.strip()) > 50:
             raise ValueError("The last name must have a maximum length of 50 characters")
 
     def validate_email(self):
         """
         Validate the email format.
         """
-        if self.email.count("@") != 1:
-            raise ValueError("")
-        
-        recipient, domain = self.email.split("@")
+        pattern = r'^[a-zA-Z0-9._]+@[a-zA-Z0-9._]+\.[a-zA-Z]{2,}$'
+        if not isinstance(self.email, str):
+            raise TypeError("Email must be a string")
 
-        if not recipient or not domain:
-            raise ValueError("Email must have both recipient and domain parts")
-        
-        
+        if not self.email.strip():
+            raise ValueError("Email must be a non-empty string")
 
+        if not re.match(pattern, self.email):
+            raise ValueError("Invalid email format")
 
-    def validate_password(self):
+    def validate_admin_status(self):
         """
+        Validate the is_admin attribute
         """
+        if not isinstance(self.is_admin, bool):
+            raise TypeError("is_admin must be a boolean")
 
+    def to_dict(self):
+        """
+        Convert the User instance to a dictionary.
+        """
+        user_dict = super().to_dict()
+        user_dict.update({
+            'first_name': self.first_name.strip(),
+            'last_name': self.last_name.strip(),
+            'email': self.email.strip()
+        })
+        return user_dict
