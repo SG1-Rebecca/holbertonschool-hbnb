@@ -32,6 +32,7 @@ class User(BaseModel):
         """
         self.validate_email()
         self.validate_name()
+        self.validate_admin_status()
 
     def validate_name(self):
         """
@@ -68,6 +69,13 @@ class User(BaseModel):
 
         if not re.match(pattern, self.email):
             raise ValueError("Invalid email format")
+
+    def validate_admin_status(self):
+        """
+        Validate the is_admin attribute
+        """
+        if not isinstance(self.is_admin, bool):
+            raise TypeError("is_admin must be a boolean")
 
     def to_dict(self):
         """
