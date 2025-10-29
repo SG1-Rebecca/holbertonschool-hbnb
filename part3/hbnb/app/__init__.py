@@ -1,6 +1,9 @@
 from flask import Flask
 from flask_restx import Api
 from app.api.v1.users import api as users_ns
+from flask_bcrypt import Bcrypt
+
+bcrypt = Bcrypt()
 
 def create_app(config_class="config.DevelopmentConfig"):
     app = Flask(__name__)
