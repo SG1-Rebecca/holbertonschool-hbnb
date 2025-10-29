@@ -53,3 +53,16 @@ class Review(BaseModel):
         """
         if not isinstance(self.user, User):
             raise ValueError("user must be a valid instance of User")
+
+    def to_dict(self):
+        """
+        Convert the Review instance to a dictionary.
+        """
+        review_dict = super().to_dict()
+        review_dict.update({
+            'text': self.text,
+            'rating': self.rating,
+            'place_id': getattr(self.place, 'id', None),
+            'user_id': getattr(self.user, 'id', None)
+        })
+        return review_dict
