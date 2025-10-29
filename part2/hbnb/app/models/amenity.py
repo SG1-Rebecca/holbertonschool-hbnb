@@ -17,7 +17,7 @@ class Amenity(BaseModel):
         if not self.name.strip():
             raise ValueError("The name of the amenity cannot be empty")
 
-    def check_length(self, name):
-        if len(self.name) > 50:
-            raise ValueError("The name of the amenity must no exceed 50 characters.")
+    def _validate_name_length(self):
+        if len(self.name) > self.NAME_LENGTH_MAX:
+            raise ValueError(f"The name of the amenity must no exceed {self.NAME_LENGTH_MAX} characters.")
         
