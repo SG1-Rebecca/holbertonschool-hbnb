@@ -1,4 +1,5 @@
 from app.models.base_model import BaseModel
+from app import bcrypt
 import re
 
 
@@ -76,6 +77,10 @@ class User(BaseModel):
         """
         if not isinstance(self.is_admin, bool):
             raise TypeError("is_admin must be a boolean")
+
+    def hash_password(self, password):
+        """Hashes the password before storing it."""
+        self.password = bcrypt.generate_password_hash(password).decode('utf-8')
 
     def to_dict(self):
         """
