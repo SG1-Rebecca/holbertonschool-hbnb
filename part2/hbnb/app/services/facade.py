@@ -20,4 +20,18 @@ class HBnBFacade:
     def get_all_users(self):
         return self.user_repo.get_all()
 
+    def update_user(self, user_id, user_data):
+        user =  self.user_repo.get(user_id)
+        if not user:
+            return None
+    
+        if 'email' in user_data and user_data['email'] != user.email:
+            existing_user = self.get_user_by_email(user_data['email'])
+            if existing_user:
+                raise ValueError("Email already registered")
+    
+        user.update(user_data)
+        return user
+
+
 facade = HBnBFacade()
