@@ -8,7 +8,7 @@ class User(BaseModel):
     User class that inherits from BaseModel.
     """
 
-    def __init__(self, email, first_name, last_name, is_admin=False):
+    def __init__(self, email, first_name, last_name, is_admin=False, password):
         """
         Initialize a User instance with email, password, first name, last name,
         and admin status.
@@ -25,6 +25,7 @@ class User(BaseModel):
         self.first_name = first_name
         self.last_name = last_name
         self.is_admin = is_admin
+        self.password = password
         self.validate()
 
     def validate(self):
