@@ -14,8 +14,8 @@ class Review(BaseModel):
         Args:
             text (str):
             rating (int): 
-            place (Place)
-            user (User)
+            place (Place):
+            user (User):
         """
         super().__init__()
         self.text = text
@@ -23,45 +23,68 @@ class Review(BaseModel):
         self.place = place
         self.user = user
 
-    def validate(self):
-        """
-        Validate the attributes of the Review instance.
-        """
-        self.validate_text()
-        self.validate_rating()
-        self.validate_place()
-        self.validate_user()
-
-    def validate_text(self):
+    @property
+    def text(self):
         """
         Validate the format of the review text
         """
-        if not isinstance(self.text, str):
+        return self.__text
+    
+    @text.setter
+    def text(self, value):
+        """
+        
+        """
+        if not isinstance(value, str):
             raise ValueError("Text must be a string")
 
-        if not self.text.strip():
+        if not value.strip():
             raise ValueError("Text cannot be empty")
+        self.__text = value
 
-    def validate_rating(self):
+    @property
+    def rating(self):
         """
-        Validate the format and rating of the review
         """
-        if not isinstance(self.rating, int) or self.rating < self.MIN_RATING or self.rating > self.MAX_RATING:
+        return self.__rating
+
+    @rating.setter
+    def rating(self, value):
+        """
+        """
+        if not isinstance(value, int) or value < self.MIN_RATING or value > self.MAX_RATING:
             raise ValueError(f"Rating must be an integer between {self.MIN_RATING} and {self.MAX_RATING}")
+        self.__rating = value
 
-    def validate_place(self):
+    @property
+    def place(self):
         """
-        Check if place is a Place instance.
         """
-        if not isinstance(self.place, Place):
+        return self.__place
+    
+    @place.setter
+    def place(self, value):
+        """
+        
+        """
+        if not isinstance(value, Place):
             raise ValueError("place must be a valid instance of Place")
+        self.__place = value
 
-    def validate_user(self):
+    @property
+    def user(self):
         """
-        Check if user is a User instance.
         """
-        if not isinstance(self.user, User):
+        return self.__user
+    
+    @user.setter
+    def user(self, value):
+        """
+        
+        """
+        if not isinstance(value, User):
             raise ValueError("user must be a valid instance of User")
+        self.__user = value
 
     def to_dict(self):
         """
