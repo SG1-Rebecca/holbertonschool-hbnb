@@ -1,5 +1,6 @@
 from flask_restx import Namespace, Resource, fields
 from app.services import facade
+from app import bcrypt
 
 api = Namespace('users', description='User operations')
 
@@ -24,10 +25,13 @@ class UserList(Resource):
         existing_user = facade.get_user_by_email(user_data['email'])
         if existing_user:
             return {'error': 'Email already registered'}, 400
+        
+        user_data['password'] = bcrypt.generate_password_hash(user_data['password']).decode('utf-8')
 
         try:
             new_user = facade.create_user(user_data)
-            return new_user.to_dict(), 201
+            return {'id': new_user.id, 'message': 'User successfully created'}, 201
+
         except Exception as error:
             return {'error': str(error)}, 400
 
