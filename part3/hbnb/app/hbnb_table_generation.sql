@@ -39,3 +39,10 @@ CREATE TABLE IF NOT EXISTS Review (
     FOREIGN KEY (place_id) REFERENCES Place(id),
     CONSTRAINT unique_review UNIQUE(user_id, place_id)
 );
+
+-- Amenity table
+
+CREATE TABLE IF NOT EXISTS Amenity (
+    id CHAR(36) PRIMARY KEY,
+    name VARCHAR(255) UNIQUE
+);
