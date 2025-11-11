@@ -25,4 +25,17 @@ CREATE TABLE IF NOT EXISTS Place (
     longitude FLOAT,
     owner_id CHAR(36) NOT NULL,
     FOREIGN KEY (owner_id) REFERENCES User(id)
-)
+);
+
+-- Review table
+
+CREATE TABLE IF NOT EXISTS Review (
+    id CHAR(36) PRIMARY KEY,
+    text TEXT NOT NULL,
+    rating INT NOT NULL CHECK (rating BETWEEN 1 AND 5),
+    user_id CHAR(36) NOT NULL,
+    place_id CHAR(36) NOT NULL,
+    FOREIGN KEY (user_id) REFERENCES User(id),
+    FOREIGN KEY (place_id) REFERENCES Place(id),
+    CONSTRAINT unique_review UNIQUE(user_id, place_id)
+);
