@@ -1,9 +1,21 @@
 
-# HBnB - Business Logic & API 
+# HBnB - Auth & DB
 
-This project
+Welcome to Part 3 of the HBnB Project, where you will extend the backend of the application by introducing user authentication, authorization, and database integration using SQLAlchemy and SQLite for development. Later, you’ll configure MySQL for production environments. In this part, you will secure the backend, introduce persistent storage, and prepare the application for a scalable, real-world deployment.
 
-## Structure
+## Main Objectives
+
+JWT Authentication using Flask-JWT-Extended
+
+Role-based Authorization with an is_admin flag
+
+Database Integration using SQLAlchemy with SQLite (and MySQL for production)
+
+Full CRUD with Persistence instead of in-memory storage
+
+Database Schema Design with Mermaid.js
+
+## Project Structure
 
 ```plaintext
 hbnb/
@@ -17,6 +29,7 @@ hbnb/
 │   │       ├── places.py
 │   │       ├── reviews.py
 │   │       ├── amenities.py
+|   |       ├── auth.py
 │   ├── models/
 │   │   ├── __init__.py
 │   │   ├── user.py
@@ -39,13 +52,13 @@ hbnb/
 ### 1. Clone the project
 
 ```bash
-  git clone https://github.com/ValentinDLC/holbertonschool-hbnb.git
+  git clone https://github.com/SG1-Rebecca/holbertonschool-hbnb.git
 ```
 
 ### 2. Go to the project directory
 
 ```bash
-  cd holbertonschool-hbnb/part2/hbnb
+  cd holbertonschool-hbnb/part3/hbnb
 ```
 ### 3. Create a virtual environment
 
@@ -64,8 +77,6 @@ python3 -m venv .venv
 
 ```python
 pip install --upgrade pip
-pip install Flask
-pip install flask-restx
 ```
 
 ### 6. Install dependencies
@@ -78,5 +89,7 @@ pip install flask-restx
 
 ```python
   python run.py
+  # or
+  flask run
 ```
 
