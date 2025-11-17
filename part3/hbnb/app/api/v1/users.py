@@ -1,4 +1,5 @@
 from flask_restx import Namespace, Resource, fields
+from flask_jwt_extended import jwt_required, get_jwt_identity
 from app.services import facade
 from app import bcrypt
 
@@ -56,14 +57,28 @@ class UserResource(Resource):
     @api.response(200, 'User details updated successfully')
     @api.response(404, 'User not found')
     @api.response(400, 'Invalid input data')
+    @api.response(400, 'You cannot modify email or password')
+    @api.response(403, 'Unauthorized action')
+    @jwt_required()
     def put(self, user_id):
         """Update a user"""
+        current_user = get_jwt_identity()
         user_data = api.payload
-        updated_user = facade.update_user(user_id, user_data)
-        if not updated_user:
-            return {'error': 'User not found'}, 404
+
+        if user_id != current_user:
+            return {'error': 'Unauthorized action'}, 403
+        
+        if 'email' in user_data:
+            return {'error': 'You cannot modify email'}, 400
+        
+        if 'password' in user_data:
+            return {'error': 'You cannot modify password'}, 400
+
         try:
-            facade.update_user(user_id, user_data)
+            updated_user = facade.update_user(user_id, user_data)
+            if not updated_user:
+                return {'error': 'User not found'}, 404
             return updated_user.to_dict(), 200
+
         except Exception as error:
             return {'error': str(error)}, 400
