@@ -48,7 +48,7 @@ class ReviewList(Resource):
     def get(self):
         """Retrieve a list of all reviews"""
         reviews = facade.get_all_reviews()
-        return [], 200
+        return [review.to_dict() for review in reviews], 200
 
 @api.route('/<review_id>')
 class ReviewResource(Resource):
@@ -77,11 +77,16 @@ class ReviewResource(Resource):
         if not review:
             return {'error': 'Review not found'}, 404
 
-        if review['user_id'] != current_user:
+        review_user_id = review.user_id
+        if review_user_id != current_user:
             return {'error': 'Unauthorized action'}, 403
 
         try:
-            review_data['user_id'] = current_user
+            if 'user_id' in review_data:
+                del review_data['user_id']
+            
+            if 'place_id' in review_data:
+                del review_data['place_id']
 
             updated_review = facade.update_review(review_id, review_data)
             return updated_review.to_dict(), 200
@@ -101,7 +106,8 @@ class ReviewResource(Resource):
         if not review:
             return {'error': 'Review not found'}, 404
         
-        if review['user_id'] != current_user:
+        review_user_id = review.user_id
+        if review_user_id != current_user:
             return {'error': 'Unauthorized action'}, 403
             
         try:
