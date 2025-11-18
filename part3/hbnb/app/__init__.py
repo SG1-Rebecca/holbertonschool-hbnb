@@ -20,6 +20,7 @@ def create_app(config_class="config.DevelopmentConfig"):
     from app.api.v1.places import api as places_ns
     from app.api.v1.reviews import api as review_ns
     from app.api.v1.auth import api as auth_ns
+    from app.api.v1.admin import api as admin_ns
 
     # Register the users namespace
     api.add_namespace(users_ns, path='/api/v1/users')
@@ -27,5 +28,6 @@ def create_app(config_class="config.DevelopmentConfig"):
     api.add_namespace(places_ns, path='/api/v1/places')
     api.add_namespace(review_ns, path='/api/v1/reviews')
     api.add_namespace(auth_ns, path='/api/v1/auth')
+    api.add_namespace(admin_ns, path='/api/v1/admin')
 
     return app

@@ -25,8 +25,8 @@ class User(BaseModel):
         self.email = email
         self.first_name = first_name
         self.last_name = last_name
-        self.hash_password(password)
         self.is_admin = is_admin
+        self.hash_password(password)
 
     @property
     def email(self):
@@ -64,7 +64,7 @@ class User(BaseModel):
         Set and validate the first name
         """
         if not isinstance(value, str):
-            raise TypeError("The first name must be an string")
+            raise TypeError("The first name must be a string")
 
         if not value.strip():
             raise ValueError("The first name must be a non-empty string")
@@ -86,7 +86,7 @@ class User(BaseModel):
         Set and validate the last name
         """
         if not isinstance(value, str):
-            raise TypeError("The last name must be an string")
+            raise TypeError("The last name must be a string")
 
         if not value.strip():
             raise ValueError("The last name must be a non-empty string")
@@ -99,13 +99,17 @@ class User(BaseModel):
         """
         Hashes the password before storing it.
         """
-        self.password = bcrypt.generate_password_hash(password).decode('utf-8')
+        if not isinstance(password, str):
+            raise TypeError("Password must be a string")
+        if not password.strip():
+            raise ValueError("Password cannot be empty")
+        self.__password = bcrypt.generate_password_hash(password).decode('utf-8')
     
     def verify_password(self, password):
         """
         Verifies if the provided password matches the hashed password.
         """
-        return bcrypt.check_password_hash(self.password, password)
+        return bcrypt.check_password_hash(self.__password, password)
 
     @property
     def is_admin(self):

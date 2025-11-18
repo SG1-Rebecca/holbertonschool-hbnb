@@ -5,7 +5,7 @@ Welcome to Part 3 of the HBnB Project, where you will extend the backend of the 
 
 ## Main Objectives
 
-JWT Authentication using Flask-JWT-Extended
+**JWT Authentication** using Flask-JWT-Extended
 
 Role-based Authorization with an is_admin flag
 
