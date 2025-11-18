@@ -1,0 +1,53 @@
+@import url('https://fonts.googleapis.com/css?family=Bruno%20Ace%20SC:700|Bruno%20Ace%20SC:400');
+
+/* 
+  This is a SAMPLE File to get you started. Follow the instructions on the project to complete the tasks. 
+  You'll probably need to override some of theese styles.
+*/
+
+:root{
+    --text: #0e0d15;
+    --background: #f9f8fc;
+    --primary: #6854bc;
+    --secondary: #a99ce1;
+    --accent: #816bde;
+    --font-family: 'Bruno Ace SC';
+
+    /* Fixed parameters */
+    --card-margin: 20px;
+    --card-padding: 10px;
+    --card-border: 1px solid #ddd;
+    --card-border-radius: 10px;
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: var(--font-family), sans-serif;
+}
+
+body {
+    background-color: var(--background);
+    color: var(--text);
+}
+
+header {
+    background-color: var(--primary);
+    color: var(--text);
+    padding: 1rem;
+}
+
+nav a {
+    color: var(--accent);
+    text-decoration: none;
+    margin-left: 1rem;
+}
+
+nav a:hover{
+    color: var(--background);
+}
+
+main {
+    padding: 2rem;
+}
