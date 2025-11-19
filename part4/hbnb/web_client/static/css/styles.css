@@ -30,6 +30,8 @@
 body {
     background-color: var(--background);
     color: var(--text);
+    display: flex;
+    flex-direction: column;
 }
 
 header {
@@ -50,4 +52,28 @@ nav a:hover{
 
 main {
     padding: 2rem;
+}
+
+/* LOGIN */
+
+#login-form{
+    margin: var(--card-margin);
+    padding: var(--card-padding);
+    border: var(--card-border);
+    border-radius: var(--card-border-radius);
+}
+
+#login-form h2{
+    text-align: center;
+}
+
+#login-form label{
+    display: block;
+    font-weight: 600;
+}
+
+#login-form button{
+    width: 100%;
+    padding: 1rem;
+    cursor: pointer;
 }
