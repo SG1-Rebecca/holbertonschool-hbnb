@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css?family=Bruno%20Ace%20SC:700|Bruno%20Ace%20SC:400');
+@import url('https://fonts.googleapis.com/css2?family=Goldman:wght@400;700&display=swap');
 
 /* 
   This is a SAMPLE File to get you started. Follow the instructions on the project to complete the tasks. 
@@ -11,7 +11,7 @@
     --primary: #6854bc;
     --secondary: #a99ce1;
     --accent: #816bde;
-    --font-family: 'Bruno Ace SC';
+    --font-family: 'Goldman';
 
     /* Fixed parameters */
     --card-margin: 20px;
@@ -52,6 +52,10 @@ nav a:hover{
 
 main {
     padding: 2rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: calc(100vh - 0px);
 }
 
 /* LOGIN */
