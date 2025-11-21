@@ -12,6 +12,18 @@ A simplified version of an AirBnB-like application
 
 Writing in progress as each stage of the project progresses 🚀  
 
+## Stack
+
+### **Frontend**
+- **HTML5**
+- **CSS3**
+- **JavaScript**
+
+### **Backend**: 
+- **Python**
+- **Flask**
+- **SQLAlchemy**
+
 
 ## Authors
 
