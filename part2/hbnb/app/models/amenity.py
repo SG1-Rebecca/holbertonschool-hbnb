@@ -15,14 +15,35 @@ class Amenity(BaseModel):
         super().__init__()
         self.name = name
 
-    def _validate_name(self):
-        if not isinstance(self.name, str):
+    @property
+    def name(self):
+        """
+        Get the name of the amenity.
+        """
+        return self.__name
+
+    @name.setter
+    def name(self, value):
+        """
+        Set and validate the name of the amenity.
+        """
+        if not isinstance(value, str):
             raise TypeError("The name of the amenity must be a string")
 
-        if not self.name.strip():
+        if not value.strip():
             raise ValueError("The name of the amenity cannot be empty")
 
-    def _validate_name_length(self):
-        if len(self.name) > self.NAME_LENGTH_MAX:
-            raise ValueError(f"The name of the amenity must no exceed {self.NAME_LENGTH_MAX} characters.")
-        
+        if len(value) > self.NAME_LENGTH_MAX:
+            raise ValueError(f"The name of the amenity must not exceed {self.NAME_LENGTH_MAX} characters.")
+
+        self.__name = value.strip()
+
+    def to_dict(self):
+        """
+        Convert the Amenity instance to a dictionary.
+        """
+        amenity_dict = super().to_dict()
+        amenity_dict.update({
+            'name': self.name
+            })
+        return amenity_dict
