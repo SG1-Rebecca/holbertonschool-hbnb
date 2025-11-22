@@ -7,7 +7,7 @@ class User(BaseModel):
     User class that inherits from BaseModel.
     """
 
-    def __init__(self, email, first_name, last_name, is_admin=False):
+    def __init__(self, first_name, last_name, email, is_admin=False):
         """
         Initialize a User instance with email, password, first name, last name,
         and admin status.
@@ -24,58 +24,109 @@ class User(BaseModel):
         self.first_name = first_name
         self.last_name = last_name
         self.is_admin = is_admin
-        self.validate()
+        self.places = []
+        self.reviews = []
 
-    def validate(self):
+    @property
+    def first_name(self):
         """
-        Validate the user attributes.
+        Get the first name
         """
-        self.validate_email()
-        self.validate_name()
-        self.validate_admin_status()
+        return self.__first_name
 
-    def validate_name(self):
+    @first_name.setter
+    def first_name(self, value):
         """
-        Validate the format of the first and last names.
+        Set and validate the first name
         """
-        if not isinstance(self.first_name, str):
+        if not isinstance(value, str):
             raise TypeError("The first name must be an string")
 
-        if not self.first_name.strip():
+        if not value.strip():
             raise ValueError("The first name must be a non-empty string")
 
-        if len(self.first_name.strip()) > 50:
+        if len(value.strip()) > 50:
             raise ValueError("The first name must have a maximum length of 50 characters")
+        self.__first_name = value.strip()
 
-        if not isinstance(self.last_name, str):
+    @property
+    def last_name(self):
+        """
+        Get the last name
+        """
+        return self.__last_name
+
+    @last_name.setter
+    def last_name(self, value):
+        """
+        Set and validate the last name
+        """
+        if not isinstance(value, str):
             raise TypeError("The last name must be an string")
 
-        if not self.last_name.strip():
+        if not value.strip():
             raise ValueError("The last name must be a non-empty string")
 
-        if len(self.last_name.strip()) > 50:
+        if len(value.strip()) > 50:
             raise ValueError("The last name must have a maximum length of 50 characters")
+        self.__last_name = value.strip()
 
-    def validate_email(self):
+    @property
+    def email(self):
         """
-        Validate the email format.
+        Get the email adress
+        """
+        return self.__email
+
+    @email.setter
+    def email(self, value):
+        """
+        Set the email address
         """
         pattern = r'^[a-zA-Z0-9._]+@[a-zA-Z0-9._]+\.[a-zA-Z]{2,}$'
-        if not isinstance(self.email, str):
+        if not isinstance(value, str):
             raise TypeError("Email must be a string")
 
-        if not self.email.strip():
+        if not value.strip():
             raise ValueError("Email must be a non-empty string")
 
-        if not re.match(pattern, self.email):
+        if not re.match(pattern, value.strip()):
             raise ValueError("Invalid email format")
+        self.__email = value.strip()
 
-    def validate_admin_status(self):
+    @property
+    def is_admin(self):
         """
-        Validate the is_admin attribute
+        Get the admin status
         """
-        if not isinstance(self.is_admin, bool):
+        return self.__is_admin
+
+    @is_admin.setter
+    def is_admin(self, value):
+        """
+        Set and validate the admin status
+        """
+        if not isinstance(value, bool):
             raise TypeError("is_admin must be a boolean")
+        self.__is_admin = value
+
+    def add_place(self, place):
+        """
+        Add an amenity to the place.
+        """
+        self.places.append(place)
+
+    def add_review(self, review):
+        """
+        Add an amenity to the place.
+        """
+        self.reviews.append(review)
+
+    def delete_review(self, review):
+        """
+        Add an amenity to the place.
+        """
+        self.reviews.remove(review)
 
     def to_dict(self):
         """
@@ -83,8 +134,8 @@ class User(BaseModel):
         """
         user_dict = super().to_dict()
         user_dict.update({
-            'first_name': self.first_name.strip(),
-            'last_name': self.last_name.strip(),
-            'email': self.email.strip()
+            'first_name': self.first_name,
+            'last_name': self.last_name,
+            'email': self.email
         })
         return user_dict

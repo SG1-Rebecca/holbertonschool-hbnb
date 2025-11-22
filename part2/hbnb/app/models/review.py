@@ -2,20 +2,23 @@ from app.models.base_model import BaseModel
 from app.models.place import Place
 from app.models.user import User
 
+
 class Review(BaseModel):
     """
+    Review class that inherits from BaseModel.
     """
     MIN_RATING = 1
     MAX_RATING = 5
+
     def __init__(self, text, rating, place, user):
         """
         Initialize a Review instance.
 
         Args:
-            text (str):
-            rating (int): 
-            place (Place)
-            user (User)
+            text (str): The content of the review
+            rating (int): The rating given to the place
+            place (Place): The Place being reviewed
+            user (User): The User who wrote the review
         """
         super().__init__()
         self.text = text
@@ -23,45 +26,72 @@ class Review(BaseModel):
         self.place = place
         self.user = user
 
-    def validate(self):
+    @property
+    def text(self):
         """
-        Validate the attributes of the Review instance.
+        Get the review text
         """
-        self.validate_text()
-        self.validate_rating()
-        self.validate_place()
-        self.validate_user()
+        return self.__text
 
-    def validate_text(self):
+    @text.setter
+    def text(self, value):
         """
-        Validate the format of the review text
+        Set and validate the review text
         """
-        if not isinstance(self.text, str):
+        if not isinstance(value, str):
             raise ValueError("Text must be a string")
 
-        if not self.text.strip():
+        if not value.strip():
             raise ValueError("Text cannot be empty")
+        self.__text = value.strip()
 
-    def validate_rating(self):
+    @property
+    def rating(self):
         """
-        Validate the format and rating of the review
+        Get the review rating
         """
-        if not isinstance(self.rating, int) or self.rating < self.MIN_RATING or self.rating > self.MAX_RATING:
+        return self.__rating
+
+    @rating.setter
+    def rating(self, value):
+        """
+        Set and validate the review rating
+        """
+        if not isinstance(value, int) or value < self.MIN_RATING or value > self.MAX_RATING:
             raise ValueError(f"Rating must be an integer between {self.MIN_RATING} and {self.MAX_RATING}")
+        self.__rating = value
 
-    def validate_place(self):
+    @property
+    def place(self):
         """
-        Check if place is a Place instance.
+        Get the Place instance
         """
-        if not isinstance(self.place, Place):
+        return self.__place
+
+    @place.setter
+    def place(self, value):
+        """
+        Set and validate the Place instance
+        """
+        if not isinstance(value, Place):
             raise ValueError("place must be a valid instance of Place")
+        self.__place = value
 
-    def validate_user(self):
+    @property
+    def user(self):
         """
-        Check if user is a User instance.
+        Get the User instance
         """
-        if not isinstance(self.user, User):
+        return self.__user
+
+    @user.setter
+    def user(self, value):
+        """
+        Set and validate the User instance
+        """
+        if not isinstance(value, User):
             raise ValueError("user must be a valid instance of User")
+        self.__user = value
 
     def to_dict(self):
         """
@@ -71,7 +101,7 @@ class Review(BaseModel):
         review_dict.update({
             'text': self.text,
             'rating': self.rating,
-            'place_id': getattr(self.place, 'id', None),
-            'user_id': getattr(self.user, 'id', None)
+            'place_id': self.place.id,
+            'user_id': self.user.id
         })
         return review_dict

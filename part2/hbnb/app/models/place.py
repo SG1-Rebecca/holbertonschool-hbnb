@@ -4,7 +4,7 @@ from app.models.user import User
 
 class Place(BaseModel):
     """
-seModel.
+    Place class that inherits from BaseModel.
     """
     TITLE_MAX_LENGTH = 100
     DESC_MAX_LENGTH = 1500
@@ -13,6 +13,7 @@ seModel.
     LATITUDE_MAX = 90.0
     LONGITUDE_MIN = -180.0
     LONGITUDE_MAX = 180.0
+
     def __init__(self, title, description, price, latitude, longitude, owner):
         """
         Initialize a Place instance
@@ -34,113 +35,174 @@ seModel.
         self.owner = owner
         self.reviews = []
         self.amenities = []
-        self.validate()
 
-    def validate(self):
-        """
-        Validate the attributes of the Place instance.
-        """
-        self.validate_title()
-        self.validate_description()
-        self.validate_price()
-        self.validate_coordinates()
-        self.validate_owner()
-
-    def validate_title(self):
+    @property
+    def title(self):
         """
         Validate the title of the place.
         """
-        if not isinstance(self.title, str):
+        return self.__title
+
+    @title.setter
+    def title(self, value):
+        """
+        Set and validate the title of the place.
+        """
+        if not isinstance(value, str):
             raise TypeError("The title must be a string")
 
-        if len(self.title) > self.TITLE_MAX_LENGTH:
+        if len(value) > self.TITLE_MAX_LENGTH:
             raise ValueError(f"The title of the place must have a maximum length of {self.TITLE_MAX_LENGTH} character")
 
-        if not self.title.strip():
+        if not value.strip():
             raise ValueError("The title must be a non-empty string")
 
-    def validate_description(self):
+        self.__title = value.strip()
+
+    @property
+    def description(self):
+        """
+        Get the description of the place.
+        """
+        return self.__description
+
+    @description.setter
+    def description(self, value):
         """
         Validate the description of the place.
         """
-        if self.description is not None and not isinstance(self.description, str):
-            raise TypeError("Description must be a string or None")
+        if not isinstance(value, str):
+            raise TypeError("Description must be a string")
 
-        if isinstance(self.description, str) and len(self.description) > self.DESC_MAX_LENGTH:
+        if not value.strip():
+            raise ValueError("Description must be a non-empty string")
+
+        if len(value.strip()) > self.DESC_MAX_LENGTH:
             raise ValueError(f"Description must be less than {self.DESC_MAX_LENGTH} characters")
 
-    def validate_price(self):
+        self.__description = value.strip()
+
+    @property
+    def price(self):
         """
         Validate the price of the place.
         """
-        if self.price is None:
+        return self.__price
+
+    @price.setter
+    def price(self, value):
+
+        if value is None:
             raise ValueError("Price is required for a place")
 
-        if isinstance(self.price, int):
-            self.price = float(self.price)
+        if isinstance(value, int):
+            value = float(value)
 
-        if not isinstance(self.price, (float, int)):
+        if not isinstance(value, (float, int)):
             raise TypeError("The price must be a float or integer")
 
-        if self.price <= self.PRICE_MIN_VALUE:
+        if value <= self.PRICE_MIN_VALUE:
             raise ValueError("The price must be a positive value")
+        self.__price = float(value)
 
-
-    def validate_coordinates(self):
+    @property
+    def latitude(self):
         """
-        Validate the latitude and longitude of the place.
+        Get the latitude of the place.
         """
-        # Validate latitude
-        if isinstance(self.latitude, int):
-            self.latitude = float(self.latitude)
+        return self.__latitude
 
-        if self.latitude is None:
+    @latitude.setter
+    def latitude(self, value):
+
+        if isinstance(value, int):
+            value = float(value)
+
+        if value is None:
             raise ValueError("Latitude is required for a place")
 
-        if not isinstance(self.latitude, float):
+        if not isinstance(value, float):
             raise TypeError("Latitude must be a float")
 
-        if self.latitude < self.LATITUDE_MIN or self.latitude > self.LATITUDE_MAX:
+        if value < self.LATITUDE_MIN or value > self.LATITUDE_MAX:
             raise ValueError(f"Latitude must be within the range of {self.LATITUDE_MIN} to {self.LATITUDE_MAX}")
+        self.__latitude = value
 
-        # Validate longitude
-        if isinstance(self.longitude, int):
-            self.longitude = float(self.longitude)
+    @property
+    def longitude(self):
+        """
+        Get the longitude of the place.
+        """
+        return self.__longitude
 
-        if self.longitude is None:
+    @longitude.setter
+    def longitude(self, value):
+        if isinstance(value, int):
+            value = float(value)
+
+        if value is None:
             raise ValueError("Longitude is required for a place")
 
-        if not isinstance(self.longitude, float):
+        if not isinstance(value, float):
             raise TypeError("Longitude must be a float")
 
-        if self.longitude < self.LONGITUDE_MIN or self.longitude > self.LONGITUDE_MAX:
+        if value < self.LONGITUDE_MIN or value > self.LONGITUDE_MAX:
             raise ValueError(f"Longitude must be within the range of {self.LONGITUDE_MIN} to {self.LONGITUDE_MAX}")
+        self.__longitude = value
 
-    def validate_owner(self):
+    @property
+    def owner(self):
         """
-        Validate that the owner is a User instance and exists.
+        Get the owner of the place.
         """
-        if self.owner is None:
+        return self.__owner
+
+    @owner.setter
+    def owner(self, value):
+        """
+        Set and validate the owner of the place
+        """
+        if value is None:
             raise ValueError("Owner is required for a place")
 
-        if not isinstance(self.owner, User):
+        if not isinstance(value, User):
             raise TypeError("The owner must be an instance of User")
 
-    def is_owner(self, user):
-        """
-        Check if the user is the owner of the place.
+        self.__owner = value
 
-        Return:
-            string: The ID of the owner if the user is the owner.
-        """
-        if not isinstance(user, User):
-            raise TypeError("The user must be an instance of User")
-        return self.owner.id == user.id
-    
     def add_review(self, review):
-        """Add a review to the place."""
+        """
+        Add a review to the place.
+        """
         self.reviews.append(review)
 
     def add_amenity(self, amenity):
-        """Add an amenity to the place."""
+        """
+        Add an amenity to the place.
+        """
         self.amenities.append(amenity)
+
+    def to_dict(self):
+        place_dict = super().to_dict()
+        place_dict.update({
+            'title': self.title,
+            'description': self.description,
+            'price': self.price,
+            'latitude': self.latitude,
+            'longitude': self.longitude,
+            'owner_id': self.owner.id
+        })
+        return place_dict
+
+    def to_dict_list(self):
+        return {
+            'id': self.id,
+            'title': self.title,
+            'description': self.description,
+            'price': self.price,
+            'latitude': self.latitude,
+            'longitude': self.longitude,
+            'owner': self.owner.to_dict(),
+            'amenities': self.amenities,
+            'reviews': self.reviews
+        }
