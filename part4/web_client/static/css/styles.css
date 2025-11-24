@@ -1,0 +1,83 @@
+@import url('https://fonts.googleapis.com/css2?family=Goldman:wght@400;700&display=swap');
+
+/* 
+  This is a SAMPLE File to get you started. Follow the instructions on the project to complete the tasks. 
+  You'll probably need to override some of theese styles.
+*/
+
+:root{
+    --text: #0e0d15;
+    --background: #f9f8fc;
+    --primary: #6854bc;
+    --secondary: #a99ce1;
+    --accent: #816bde;
+    --font-family: 'Goldman';
+
+    /* Fixed parameters */
+    --card-margin: 20px;
+    --card-padding: 10px;
+    --card-border: 1px solid #ddd;
+    --card-border-radius: 10px;
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: var(--font-family), sans-serif;
+}
+
+body {
+    background-color: var(--background);
+    color: var(--text);
+    display: flex;
+    flex-direction: column;
+}
+
+header {
+    background-color: var(--primary);
+    color: var(--text);
+    padding: 1rem;
+}
+
+nav a {
+    color: var(--accent);
+    text-decoration: none;
+    margin-left: 1rem;
+}
+
+nav a:hover{
+    color: var(--background);
+}
+
+main {
+    padding: 2rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: calc(100vh - 0px);
+}
+
+/* LOGIN */
+
+#login-form{
+    margin: var(--card-margin);
+    padding: var(--card-padding);
+    border: var(--card-border);
+    border-radius: var(--card-border-radius);
+}
+
+#login-form h2{
+    text-align: center;
+}
+
+#login-form label{
+    display: block;
+    font-weight: 600;
+}
+
+#login-form button{
+    width: 100%;
+    padding: 1rem;
+    cursor: pointer;
+}
