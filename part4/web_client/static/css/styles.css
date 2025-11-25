@@ -24,20 +24,27 @@
     box-sizing: border-box;
     margin: 0;
     padding: 0;
-    font-family: var(--font-family), sans-serif;
 }
 
 body {
+    font-family: var(--font-family), sans-serif;
     background-color: var(--background);
     color: var(--text);
     display: flex;
     flex-direction: column;
 }
 
+/* HEADER */
 header {
     background-color: var(--primary);
     color: var(--text);
     padding: 1rem;
+}
+
+nav{
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
 }
 
 nav a {
@@ -56,6 +63,13 @@ main {
     align-items: center;
     justify-content: center;
     min-height: calc(100vh - 0px);
+}
+
+main > h1{
+    text-align: center;
+    color: var(--primary);
+    margin-bottom: 2rem;
+    letter-spacing: 0.5px;
 }
 
 /* LOGIN */
@@ -78,6 +92,46 @@ main {
 
 #login-form button{
     width: 100%;
-    padding: 1rem;
     cursor: pointer;
+    background: var(--accent);
+    border: none;
+    border-radius: 0.25rem;
+    font-weight: 700;
+    font-size: 1rem;
+    margin-top: 1.5rem;
+    padding: 0.5rem 1.5rem;
+}
+
+/* INDEX */
+
+.place-card{
+    margin: var(--card-margin);
+    padding: var(--card-padding);
+    border: var(--card-border);
+    border-radius: var(--card-border-radius);
+    background-color: var(--secondary);
+    display: flex;
+    flex-direction: column;
+}
+
+.place-card > button{
+
+    width: 70%;
+
+}
+
+/* FOOTER */
+
+footer {
+    background: var(--primary);
+    color: var(--text);
+    text-align: center;
+    padding: 1.5rem;
+    margin-top: auto; 
+    box-shadow: 0 -4px 12px rgba(79, 0, 188, 0.4); 
+}
+
+footer p {
+    font-size: 0.9rem;
+    opacity: 1;
 }
