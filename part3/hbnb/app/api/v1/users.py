@@ -81,7 +81,7 @@ class UserResource(Resource):
             return {'error': str(error)}, 400
 
 
-@api.route('/users/')
+@api.route('/admin/')
 class AdminUserCreate(Resource):
     @api.expect(user_model, validate=True)
     @api.response(201, 'Admin created user successfully')
@@ -103,7 +103,7 @@ class AdminUserCreate(Resource):
         return {'id': create_new_user.id, 'message': 'Admin created user successfully'}, 201
 
 
-@api.route('/users/<user_id>')
+@api.route('/admin/<user_id>')
 class AdminUserModify(Resource):
     @api.expect(user_model)
     @api.response(201, 'User successfully updated by admin')
