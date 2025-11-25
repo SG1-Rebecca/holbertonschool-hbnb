@@ -16,6 +16,14 @@ user_id_model = api.model('User created', {
     'id': fields.String(description='The unique identifier of the newly created user')
 })
 
+admin_user_model = api.model('Admin', {
+     'first_name': fields.String(required=True, description='First name of the user'),
+    'last_name': fields.String(required=True, description='Last name of the user'),
+    'email': fields.String(required=True, description='Email of the user'),
+    'password': fields.String(required=True, description='Password of the user'),
+    'is_admin': fields.Boolean(description='Grant admin privileges')
+})
+
 
 @api.route('/')
 class UserList(Resource):
@@ -79,7 +87,6 @@ class AdminUserCreate(Resource):
     @api.response(201, 'Admin created user successfully')
     @api.response(400, 'Email already registered')
     @api.response(403, 'Admin privileges required')
-    @api.response()
     @jwt_required()
     def post(self):
         current_user = get_jwt()
