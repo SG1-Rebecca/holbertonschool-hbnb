@@ -75,7 +75,23 @@ class HBnBFacade:
         return self.place_repo.get_all()
 
     def update_place(self, place_id, place_data):
-        self.place_repo.update(place_id, place_data)
+        place = self.place_repo.get(place_id)
+        if not place:
+            raise ValueError("Place not found")
+        
+        updated_place = self.place_repo.update(place_id, place_data)
+        if 'amenities' in place_data:
+            amenity_ids = place_data['amenities']
+
+            place.amenities = []
+
+            for amenity_id in amenity_ids:
+                amenity = self.get_amenity(amenity_id)
+                if amenity:
+                    place.add_amenity(amenity)
+
+        return updated_place
+
     
     # == REVIEW == 
     def create_review(self, review_data):
