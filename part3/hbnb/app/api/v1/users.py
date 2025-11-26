@@ -1,3 +1,4 @@
+from flask import request
 from flask_restx import Namespace, Resource, fields
 from flask_jwt_extended import jwt_required, get_jwt
 from app.services import facade
@@ -17,7 +18,7 @@ user_id_model = api.model('User created', {
 })
 
 admin_user_model = api.model('Admin', {
-     'first_name': fields.String(required=True, description='First name of the user'),
+    'first_name': fields.String(required=True, description='First name of the user'),
     'last_name': fields.String(required=True, description='Last name of the user'),
     'email': fields.String(required=True, description='Email of the user'),
     'password': fields.String(required=True, description='Password of the user'),
@@ -93,7 +94,7 @@ class AdminUserCreate(Resource):
         if not current_user.get('is_admin'):
             return {'error': 'Admin privileges required'}, 403
 
-        user_data = api.payload
+        user_data = request.json
         email = user_data.get('email')
 
         if facade.get_user_by_email(email):
@@ -105,7 +106,7 @@ class AdminUserCreate(Resource):
 
 @api.route('/admin/<user_id>')
 class AdminUserModify(Resource):
-    @api.expect(user_model)
+    @api.expect(admin_user_model)
     @api.response(201, 'User successfully updated by admin')
     @api.response(400, 'Email already in use')
     @api.response(403, 'Admin privileges required')
@@ -115,7 +116,7 @@ class AdminUserModify(Resource):
         if not current_user.get('is_admin'):
             return {'error': 'Admin privileges required'}, 403
 
-        data = api.payload
+        data = request.json
         email = data.get('email')
 
         # Ensure email uniqueness
