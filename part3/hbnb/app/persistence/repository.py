@@ -1,3 +1,4 @@
+from app import db
 from abc import ABC, abstractmethod
 
 
