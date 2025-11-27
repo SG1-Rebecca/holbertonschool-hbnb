@@ -1,16 +1,22 @@
+from app import db
 from app.models.base_model import BaseModel
 from app.models.place import Place
 from app.models.user import User
+from sqlalchemy.orm import validates
 
 
 class Review(BaseModel):
-    """
-    Review class that inherits from BaseModel.
-    """
+    __tablename__ = 'reviews'
+    id = db.Column(db.String, primary_key=True)
+    text = db.Column(db.Text, nullable=False)
+    rating = db.Column(db.Integer, nullable=False)
+    place_id = db.Column(db.String, db.ForeignKey('places.id'), nullable=False)
+    user_id = db.Column(db.String, db.ForeignKey('users.id'), nullable=False)
+
     MIN_RATING = 1
     MAX_RATING = 5
 
-    def __init__(self, text, rating, place, user):
+    def __init__(self, text: str, rating: int, place: str, user):
         """
         Initialize a Review instance.
 
@@ -26,40 +32,26 @@ class Review(BaseModel):
         self.place = place
         self.user = user
 
-    @property
-    def text(self):
+    @validates("text")
+    def validate_text(self, key, value):
         """
-        Get the review text
-        """
-        return self.__text
-
-    @text.setter
-    def text(self, value):
-        """
-        Set and validate the review text
+        Validate the review text
         """
         if not isinstance(value, str):
-            raise ValueError("Text must be a string")
+            raise ValueError(f"{key} must be a string")
 
         if not value.strip():
-            raise ValueError("Text cannot be empty")
-        self.__text = value.strip()
+            raise ValueError(f"{key} cannot be empty")
+        return value.strip()
 
-    @property
-    def rating(self):
+    @validates("rating")
+    def validate_rating(self, key, value):
         """
-        Get the review rating
-        """
-        return self.__rating
-
-    @rating.setter
-    def rating(self, value):
-        """
-        Set and validate the review rating
+        Validate the review rating
         """
         if not isinstance(value, int) or value < self.MIN_RATING or value > self.MAX_RATING:
-            raise ValueError(f"Rating must be an integer between {self.MIN_RATING} and {self.MAX_RATING}")
-        self.__rating = value
+            raise ValueError(f"{key} must be an integer between {self.MIN_RATING} and {self.MAX_RATING}")
+        return value
 
     @property
     def place(self):
@@ -97,11 +89,11 @@ class Review(BaseModel):
         """
         Convert the Review instance to a dictionary.
         """
-        review_dict = super().to_dict()
-        review_dict.update({
+        return{
             'text': self.text,
             'rating': self.rating,
             'place_id': self.place.id,
-            'user_id': self.user.id
-        })
-        return review_dict
+            'user_id': self.user.id,
+            'created_at': self.created_at.isoformat() if self.created_at else None,
+            'updated_at': self.updated_at.isoformat() if self.updated_at else None
+        }

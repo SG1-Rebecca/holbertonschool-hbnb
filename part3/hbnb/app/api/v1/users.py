@@ -1,9 +1,9 @@
-from flask import request
 from flask_restx import Namespace, Resource, fields
 from flask_jwt_extended import jwt_required, get_jwt
 from app.services import facade
 
 api = Namespace('users', description='User operations')
+
 
 # Define the user model for input validation and documentation
 user_model = api.model('User', {
@@ -15,14 +15,6 @@ user_model = api.model('User', {
 
 user_id_model = api.model('User created', {
     'id': fields.String(description='The unique identifier of the newly created user')
-})
-
-admin_user_model = api.model('Admin', {
-    'first_name': fields.String(required=True, description='First name of the user'),
-    'last_name': fields.String(required=True, description='Last name of the user'),
-    'email': fields.String(required=True, description='Email of the user'),
-    'password': fields.String(required=True, description='Password of the user'),
-    'is_admin': fields.Boolean(description='Grant admin privileges')
 })
 
 
@@ -48,7 +40,7 @@ class UserList(Resource):
     def get(self):
         """Retrieve a list of users"""
         user_list = facade.get_all_users()
-        return [user.to_dict() for user in user_list]
+        return [user.to_dict() for user in user_list], 200
 
 
 @api.route('/<user_id>')
@@ -76,57 +68,10 @@ class UserResource(Resource):
             return {'error': 'User not found'}, 404
 
         try:
-            facade.update_user(user_id, user_data)
+            updated_user = facade.update_user(user_id, user_data)
+            if not updated_user:
+                updated_user = facade.get_user(user_id)
             return user.to_dict(), 200
         except Exception as error:
             return {'error': str(error)}, 400
 
-
-@api.route('/admin/')
-class AdminUserCreate(Resource):
-    @api.expect(user_model, validate=True)
-    @api.response(201, 'Admin created user successfully')
-    @api.response(400, 'Email already registered')
-    @api.response(403, 'Admin privileges required')
-    @jwt_required()
-    def post(self):
-        current_user = get_jwt()
-        if not current_user.get('is_admin'):
-            return {'error': 'Admin privileges required'}, 403
-
-        user_data = request.json
-        email = user_data.get('email')
-
-        if facade.get_user_by_email(email):
-            return {'error': 'Email already registered'}, 400
-
-        create_new_user = facade.create_user(user_data)
-        return {'id': create_new_user.id, 'message': 'Admin created user successfully'}, 201
-
-
-@api.route('/admin/<user_id>')
-class AdminUserModify(Resource):
-    @api.expect(admin_user_model)
-    @api.response(201, 'User successfully updated by admin')
-    @api.response(400, 'Email already in use')
-    @api.response(403, 'Admin privileges required')
-    @jwt_required()
-    def put(self, user_id):
-        current_user = get_jwt()
-        if not current_user.get('is_admin'):
-            return {'error': 'Admin privileges required'}, 403
-
-        data = request.json
-        email = data.get('email')
-
-        # Ensure email uniqueness
-        if email:
-            existing_user = facade.get_user_by_email(email)
-            if existing_user and existing_user.id != user_id:
-                return {'error': 'Email already in use'}, 400
-
-        try:
-            facade.update_user(user_id, data)
-            return {'message': 'User successfully updated by admin'}, 200
-        except Exception as error:
-            return {'error': str(error)}, 400

@@ -1,11 +1,13 @@
+from app import db
 from app.models.base_model import BaseModel
+from sqlalchemy.orm import validates
 
 class Amenity(BaseModel):
-    """
-    Amenity class that inherits from BaseModel.
-    """
+    __tablename__ = 'amenities'
+    name = db.Column(db.String(50), nullable=False)
+
     NAME_LENGTH_MAX = 50
-    def __init__(self, name):
+    def __init__(self, name: str):
         """
         Initialize an Amenity instance.
 
@@ -15,35 +17,29 @@ class Amenity(BaseModel):
         super().__init__()
         self.name = name
 
-    @property
-    def name(self):
+    @validates("name")
+    def validate_name(self, key, value):
         """
-        Get the name of the amenity.
-        """
-        return self.__name
-
-    @name.setter
-    def name(self, value):
-        """
-        Set and validate the name of the amenity.
+        Validates the name of the amenity.
         """
         if not isinstance(value, str):
-            raise TypeError("The name of the amenity must be a string")
+            raise TypeError(f"The {key} of the amenity must be a string")
 
         if not value.strip():
-            raise ValueError("The name of the amenity cannot be empty")
+            raise ValueError(f"The {key} of the amenity cannot be empty")
 
         if len(value) > self.NAME_LENGTH_MAX:
-            raise ValueError(f"The name of the amenity must not exceed {self.NAME_LENGTH_MAX} characters.")
+            raise ValueError(f"The {key} of the amenity must not exceed {self.NAME_LENGTH_MAX} characters.")
 
-        self.__name = value.strip()
+        return value.strip()
 
     def to_dict(self):
         """
         Convert the Amenity instance to a dictionary.
         """
-        amenity_dict = super().to_dict()
-        amenity_dict.update({
-            'name': self.name
-            })
-        return amenity_dict
+        return {
+            'id': self.id,
+            'name': self.name,
+            'created_at': self.created_at.isoformat() if self.created_at else None,
+            'updated_at': self.updated_at.isoformat() if self.updated_at else None
+        }
