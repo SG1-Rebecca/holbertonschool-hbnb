@@ -1,7 +1,9 @@
 from flask_restx import Namespace, Resource, fields
+from flask_jwt_extended import jwt_required, get_jwt
 from app.services import facade
 
 api = Namespace('users', description='User operations')
+
 
 # Define the user model for input validation and documentation
 user_model = api.model('User', {
@@ -14,6 +16,7 @@ user_model = api.model('User', {
 user_id_model = api.model('User created', {
     'id': fields.String(description='The unique identifier of the newly created user')
 })
+
 
 @api.route('/')
 class UserList(Resource):
@@ -31,13 +34,13 @@ class UserList(Resource):
             return {'error': 'Email already registered'}, 400
 
         new_user = facade.create_user(user_data)
-        return {'id': new_user.id, 'message':'User\'s ID successfully created'}, 201
+        return {'id': new_user.id, 'message': 'User\'s ID successfully created'}, 201
 
     @api.response(200, 'List of users retrieved successfully')
     def get(self):
         """Retrieve a list of users"""
         user_list = facade.get_all_users()
-        return [user.to_dict() for user in user_list]
+        return [user.to_dict() for user in user_list], 200
 
 
 @api.route('/<user_id>')
@@ -63,9 +66,12 @@ class UserResource(Resource):
 
         if not user:
             return {'error': 'User not found'}, 404
- 
+
         try:
-            facade.update_user(user_id, user_data)
+            updated_user = facade.update_user(user_id, user_data)
+            if not updated_user:
+                updated_user = facade.get_user(user_id)
             return user.to_dict(), 200
         except Exception as error:
             return {'error': str(error)}, 400
+

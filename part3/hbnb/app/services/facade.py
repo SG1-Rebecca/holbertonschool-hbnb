@@ -1,4 +1,7 @@
-from app.persistence.repository import InMemoryRepository
+from app.services.repositories.user_repository import UserRepository
+from app.services.repositories.amenity_repository import AmenityRepository
+from app.services.repositories.place_repository import PlaceRepository
+from app.services.repositories.review_repository import ReviewRepository
 from app.models.user import User
 from app.models.amenity import Amenity
 from app.models.place import Place
@@ -7,10 +10,10 @@ from app.models.review import Review
 
 class HBnBFacade:
     def __init__(self):
-        self.user_repo = InMemoryRepository()
-        self.amenity_repo = InMemoryRepository()
-        self.place_repo = InMemoryRepository()
-        self.review_repo = InMemoryRepository()
+        self.user_repo = UserRepository()
+        self.amenity_repo = AmenityRepository()
+        self.place_repo = PlaceRepository()
+        self.review_repo = ReviewRepository()
 
     # == USER ==
     def create_user(self, user_data):
@@ -75,7 +78,23 @@ class HBnBFacade:
         return self.place_repo.get_all()
 
     def update_place(self, place_id, place_data):
-        self.place_repo.update(place_id, place_data)
+        place = self.place_repo.get(place_id)
+        if not place:
+            raise ValueError("Place not found")
+        
+        updated_place = self.place_repo.update(place_id, place_data)
+        if 'amenities' in place_data:
+            amenity_ids = place_data['amenities']
+
+            place.amenities = []
+
+            for amenity_id in amenity_ids:
+                amenity = self.get_amenity(amenity_id)
+                if amenity:
+                    place.add_amenity(amenity)
+
+        return updated_place
+
     
     # == REVIEW == 
     def create_review(self, review_data):

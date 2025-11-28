@@ -1,14 +1,20 @@
+from app import bcrypt, db
 from app.models.base_model import BaseModel
-from app import bcrypt
+from sqlalchemy.orm import validates
 import re
 
 
 class User(BaseModel):
-    """
-    User class that inherits from BaseModel.
-    """
+    __tablename__ = 'users'
 
-    def __init__(self, first_name, last_name, email, password, is_admin=False):
+    first_name = db.Column(db.String(50), nullable=False)
+    last_name = db.Column(db.String(50), nullable=False)
+    email = db.Column(db.String(120), nullable=False, unique=True)
+    password = db.Column(db.String(128), nullable=False)
+    is_admin = db.Column(db.Boolean, default=False)
+
+
+    def __init__(self, first_name: str, last_name: str, email: str, password: str, is_admin: bool =False):
         """
         Initialize a User instance with email, password, first name, last name,
         and admin status.
@@ -26,75 +32,38 @@ class User(BaseModel):
         self.last_name = last_name
         self.hash_password(password)
         self.is_admin = is_admin
-        self.places = []
-        self.reviews = []
 
-    @property
-    def first_name(self):
-        """
-        Get the first name
-        """
-        return self.__first_name
 
-    @first_name.setter
-    def first_name(self, value):
+    @validates("first_name", "last_name")
+    def validate_names(self, key, value):
         """
-        Set and validate the first name
+        Validate first_name and last_name.
         """
         if not isinstance(value, str):
-            raise TypeError("The first name must be an string")
+            raise TypeError(f"The {key} must be an string")
 
         if not value.strip():
-            raise ValueError("The first name must be a non-empty string")
+            raise ValueError(f"The {key} must be a non-empty string")
 
         if len(value.strip()) > 50:
-            raise ValueError("The first name must have a maximum length of 50 characters")
-        self.__first_name = value.strip()
+            raise ValueError(f"The {key} must have a maximum length of 50 characters")
+        return value.strip()
 
-    @property
-    def last_name(self):
+    @validates("email")
+    def validate_email(self, key, value):
         """
-        Get the last name
-        """
-        return self.__last_name
-
-    @last_name.setter
-    def last_name(self, value):
-        """
-        Set and validate the last name
-        """
-        if not isinstance(value, str):
-            raise TypeError("The last name must be an string")
-
-        if not value.strip():
-            raise ValueError("The last name must be a non-empty string")
-
-        if len(value.strip()) > 50:
-            raise ValueError("The last name must have a maximum length of 50 characters")
-        self.__last_name = value.strip()
-
-    @property
-    def email(self):
-        """
-        Get the email adress
-        """
-        return self.__email
-
-    @email.setter
-    def email(self, value):
-        """
-        Set the email address
+        Validate email format.
         """
         pattern = r'^[a-zA-Z0-9._]+@[a-zA-Z0-9._]+\.[a-zA-Z]{2,}$'
         if not isinstance(value, str):
-            raise TypeError("Email must be a string")
+            raise TypeError(f"{key} must be a string")
 
         if not value.strip():
-            raise ValueError("Email must be a non-empty string")
+            raise ValueError(f"{key} must be a non-empty string")
 
         if not re.match(pattern, value.strip()):
             raise ValueError("Invalid email format")
-        self.__email = value.strip()
+        return value.strip()
     
     def verify_password(self, password):
         """
@@ -110,21 +79,14 @@ class User(BaseModel):
         """
         self.password = bcrypt.generate_password_hash(password).decode('utf-8')
 
-    @property
-    def is_admin(self):
+    @validates("is_admin")
+    def validate_admin(self, key, value):
         """
-        Get the admin status
-        """
-        return self.__is_admin
-
-    @is_admin.setter
-    def is_admin(self, value):
-        """
-        Set and validate the admin status
+        Validate admin status.
         """
         if not isinstance(value, bool):
             raise TypeError("is_admin must be a boolean")
-        self.__is_admin = value
+        return value
 
     def add_place(self, place):
         """
@@ -148,10 +110,12 @@ class User(BaseModel):
         """
         Convert the User instance to a dictionary.
         """
-        user_dict = super().to_dict()
-        user_dict.update({
+        return {
+            'id': self.id,
             'first_name': self.first_name,
             'last_name': self.last_name,
-            'email': self.email
-        })
-        return user_dict
+            'email': self.email,
+            'is_admin': self.is_admin,
+            'created_at': self.created_at.isoformat() if self.created_at else None,
+            'updated_at': self.updated_at.isoformat() if self.updated_at else None
+        }
