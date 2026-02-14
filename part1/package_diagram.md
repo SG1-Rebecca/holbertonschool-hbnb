@@ -1,20 +1,24 @@
 ```mermaid
-classDiagram
-class PresentationLayer {
-    <<Interface>>
-    +API_endpoints
-    +Service
-}
-class BusinessLogicLayer {
-    +User
-    +Place
-    +Review
-    +Amenity
-}
-class PersistenceLayer {
-    <<Repository>>
-    +Repositories
-    +DatabaseAccessObjects
-}
-PresentationLayer --> BusinessLogicLayer : Use Facade Pattern
-BusinessLogicLayer --> PersistenceLayer : Database Operations
+flowchart TD
+    subgraph PresentationLayer["Presentation Layer"]
+    direction TB
+    API_endpoints[API Endpoints]
+    Services
+    API_endpoints --> Services
+    end
+
+    subgraph BusinessLogicLayer["Business Logic Layer"]
+    direction TB
+    Models
+    User
+    Place
+    Review
+    Amenity
+    end
+
+    subgraph PersistenceLayer["Persistence Layer"]
+    DatabaseAccess["Database Access"]
+    end
+
+PresentationLayer -- Use Facade Pattern --> BusinessLogicLayer
+BusinessLogicLayer -- Database Operations--> PersistenceLayer
