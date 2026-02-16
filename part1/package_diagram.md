@@ -9,7 +9,6 @@ flowchart TD
 
     subgraph BusinessLogicLayer["Business Logic Layer"]
     direction TB
-    Models
     User
     Place
     Review
@@ -17,7 +16,10 @@ flowchart TD
     end
 
     subgraph PersistenceLayer["Persistence Layer"]
+    direction TB
     DatabaseAccess["Database Access"]
+    Repositories
+    Repositories --> DatabaseAccess
     end
 
 PresentationLayer -- Use Facade Pattern --> BusinessLogicLayer
