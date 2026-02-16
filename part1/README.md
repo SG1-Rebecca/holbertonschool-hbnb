@@ -79,7 +79,7 @@ Relationships: Links with the Place and Review entities to manage listings and f
 
 **Place**
 
-__Role:__ Represents the properties available for booking (e.g., houses, apartments).
+**Role:** Represents the properties available for booking (e.g., houses, apartments).
 
 Key Attributes: place_id, title, description, price, latitude, longitude.
 
@@ -113,5 +113,63 @@ Relationships: Associated with Place to describe available amenities.
 - Place -> Review: One to Many
 - Place -> Amenity: Many to Many
 
-### Sequence Diagram
+### 3.Sequence Diagram
 
+### 3.1 User registration
+
+**1. Initialization**
+
+**User -> API:** Register User (user data)
+The client submits registration information (first_name, last_name, email, password) to the system's entry point.
+
+**API -> BusinessLogic:** Validate and Process Request
+The API delegates the request to the business logic layer, separating HTTP concerns from core processing.
+
+**2. First Check - Data Validation**
+
+BusinessLogic performs validation
+
+The business layer checks for:
+
+-> Correct data formats (valid email, password strength)
+
+-> Required fields presence
+
+-> Business-specific rules
+
+**3. Conditional Flow A: Invalid Data**
+
+- **BusinessLogic --> API:** Return validation failure response with error details
+
+- **API --> User:** Return Failure
+User receives error message about what needs correction
+
+**4. Conditional B: Valid Data → Existence Check**
+
+- **BusinessLogic -> Database:** Check if user exists
+queries database using unique identifiers (typically email)
+
+- **Database --> BusinessLogic:** User exists / Not found
+Returns existence status
+
+**5. Conditional B1: User Already Exists**
+
+- **BusinessLogic --> API:** Return Failure response "user already registered" error
+
+- **API --> User:** Return Failure
+User informed of duplicate registration attempt
+
+**6. Conditional B2: User Does Not Exist → Registration**
+
+- **BusinessLogic -> Database:** Save data
+Creates new user record
+
+- **Database --> BusinessLogic:** Confirm save
+Returns success confirmation with user ID
+
+- **BusinessLogic --> API:** Returns success response with user details
+
+- **API --> User:** Return Success
+User receives confirmation of successful registration
+
+### 3.2 Place Creation
