@@ -9,14 +9,14 @@ The application follows a 3-tier architecture, composed of the following layers:
 
 **Description:**
 
-The presentation layer serves as the interface between the user and the application. It encapsulates all user interactions, managing the representation of information and handling input from users.
+The Presentation Layer acts as the user interface gateway, handling all interactions between the user and the application. It processes incoming requests, validates inputs, and formats responses for delivery.
 
 **Responsibilities:**
 
 - Handle HTTP requests and responses via API endpoints
 - Validate incoming request payloads
-- Format responses (JSON, etc...)
-- Delegate business logic to the Business Logic Layer via Facade Pattern
+- Format responses (e.g, JSON,XML)
+- Delegate business logic to the Business Logic Layer using Facade Pattern
 - Manage error responses and user feedback
 
 **2. Business Logic Layer**
@@ -270,9 +270,9 @@ Creates new review record with:
 
 -> Review text
 
--> Place reference ID
+-> Place ID
 
--> User reference ID (reviewer)
+-> User  ID
 
 **Database --> BusinessLogic:** Confirm Save
 
@@ -290,3 +290,79 @@ Returns success response with review details
 **API --> User:** Return Success (review submitted)
 
 User receives confirmation that review is now published
+
+### 3.4 Fetch Place
+
+**1. Initialization**
+
+User -> API: Request a list of places
+The user submits a request to view places with optional filter criteria:
+
+Location/coordinates (latitude, longitude)
+
+Price range (min/max)
+
+Amenities (WiFi, parking, pool, etc.)
+
+
+**API -> BusinessLogic:** Validate filter criteria
+The API forwards the filter parameters to the business logic layer for validation and processing
+
+**2. Filter Validation**
+
+BusinessLogic performs validation on all filter criteria:
+
+-> Price validation
+
+-> Coordinate validation: Latitude, longitude
+
+-> Amenities (optionnal)
+
+**3. Conditional Flow A: Invalid Filter Criteria**
+
+**BusinessLogic --> API:** Return Failure
+Returns specific validation error details:
+
+"Minimum price cannot exceed maximum price"
+
+"Invalid coordinates provided"
+
+
+**API --> User:** Return Failure response
+User receives clear error messages to correct their search filters
+
+**4. Conditional Flow B: Valid Filter Criteria → Fetch Places**
+
+**BusinessLogic -> Database:** Fetch filtered places
+Constructs and executes an optimized database query with:
+
+-> Price filtering: Apply price range constraints
+
+-> Amenity matching: Ensure places have requested amenities
+
+-> Sorting: Order results by relevance, price, rating, etc.
+
+**Database --> BusinessLogic:** Return places list
+Returns matching place records with:
+
+Basic place information (title, description, price)
+
+Location details and distance from search point
+
+Average rating and review count
+
+Availability status
+
+**BusinessLogic --> API:** Return Place data
+Enriches and formats the place data:
+
+Calculates dynamic fields (total price for stay duration)
+
+Adds derived information (distance in human-readable format)
+
+Structures response for optimal client consumption
+
+**API --> User:** Return Success (places list)
+Returns formatted response with:
+
+List of matching places
