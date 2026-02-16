@@ -173,3 +173,59 @@ Returns success confirmation with user ID
 User receives confirmation of successful registration
 
 ### 3.2 Place Creation
+
+**1. Initialization**
+
+**User -> API:** Place Creation (place data)
+The user submits place information (title, description, price, coordinate, amenities, etc.) to create a new listing
+
+**API -> BusinessLogic:** Validate and Process Request
+The API forwards the place data to the business logic layer for processing
+
+**2. First Check - Data Validation**
+
+BusinessLogic performs validation on the place data:
+
+-> Required fields: title, description, price, latitude, longitude
+
+-> Price must be a positive number
+
+-> Coordinate format validation
+
+-> Owner information must be valid
+
+**3. Conditional Flow A: Invalid Data**
+
+- **BusinessLogic --> API:** Return Failure response validation error details (e.g., "Price must be greater than 0", "Coordinate required")
+
+- **API --> User:** Return Failure
+User receives specific error messages for correction
+
+**4. Conditional Flow B: Valid Data →  Duplicate Check**
+
+- **BusinessLogic -> Database:** Check if Place exists
+Queries database to check if the same owner already has a similar/identical place listing
+
+- **Database --> BusinessLogic:** Place Status
+Returns whether a matching place exists for this owner
+
+**5. Conditional Flow B1: Duplicate Place**
+
+- **BusinessLogic --> API:** Return Failure response
+"duplicate place" error - the owner cannot create a duplicate listing
+
+- **API --> User:** Return Failure (Duplicated place)
+User informed that they cannot create a duplicate listing
+
+**6. Conditional Flow B2: Place Does Not Exist → Creation**
+
+- **BusinessLogic -> Database:** Save Place data
+Creates new place record with all provided information
+
+- **Database --> BusinessLogic:** Confirm Save
+Returns success confirmation with new place ID and timestamp
+
+- **BusinessLogic --> API:** Returns success response with place details (ID, creation date, etc.)
+
+- **API --> User:** Return Success (place created)
+User receives confirmation that his Place created successfully
