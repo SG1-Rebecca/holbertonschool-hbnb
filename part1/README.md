@@ -229,3 +229,64 @@ Returns success confirmation with new place ID and timestamp
 
 - **API --> User:** Return Success (place created)
 User receives confirmation that his Place created successfully
+
+### 3.3 Review Submission
+
+**1. Initialization**
+
+**User -> API:** Submit Review (review data)
+
+The user submits review information including:
+
+-> Rating (1-5 stars)
+
+-> Comment/text feedback
+
+-> Place ID being reviewed
+
+-> User ID
+
+**API -> BusinessLogic:** Validate and create a review
+The API forwards the review data to the business logic layer for validation and processing
+
+**2. Critical Business Rule Check - Owner Validation**
+
+BusinessLogic performs essential validation to determine if the user is the owner of the place being reviewed
+
+**3. Conditional A: User is the Owner**
+
+- **BusinessLogic --> API:** Return Failure response
+Returns business rule violation: "Owners cannot review their own properties"
+
+- **API --> User:** Return Failure (cannot review own place)
+User receives clear error message explaining why review cannot be submitted
+
+**4. Conditional Flow B: User is NOT the Owner**
+
+**BusinessLogic -> Database:** Save Place review in Database
+Creates new review record with:
+
+-> Rating value
+
+-> Review text
+
+-> Place reference ID
+
+-> User reference ID (reviewer)
+
+**Database --> BusinessLogic:** Confirm Save
+
+Returns confirmation with:
+
+-> Review ID
+
+-> Creation timestamp
+
+-> Updated place rating average
+
+**BusinessLogic --> API:**
+Returns success response with review details
+
+**API --> User:** Return Success (review submitted)
+
+User receives confirmation that review is now published
