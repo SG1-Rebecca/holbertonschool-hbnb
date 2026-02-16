@@ -8,6 +8,7 @@ class BaseModel {
     + update ()
     + delete ()
     + to_dict() dict
+    + validate()
 }
 class User {
     - first_name: string
@@ -15,12 +16,7 @@ class User {
     - email: string
     - password: string
     - is_admin: boolean
-    + register ()
-    + verify_password()
-    + submit_review()
-    + create_place()
-    + get_places()
-    + get_reviews()
+    - register()
 }
 class Place {
     - owner_id: UUID4
@@ -36,13 +32,12 @@ class Review {
     - place_id: UUID4
     - rating: int
     - comment: string
-    + get_user()
-    + get_place()
+    + validate_rating()
+    + validate_comment()
 }
 class Amenity {
     - name: string
     - description: string
-    + list ()
 }
 
 BaseModel <|-- User
@@ -53,5 +48,4 @@ BaseModel <|-- Amenity
 User "1" --> "0..*" Place : owns
 User "1" --> "0..*" Review : writes
 Place "1" *-- "0..*" Review: receives
-Place "0..*" --> "0..*" Amenity: has
-
+Place "*" --> "*" Amenity: has
