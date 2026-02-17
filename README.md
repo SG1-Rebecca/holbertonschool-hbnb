@@ -33,7 +33,7 @@ The application allows users to perform the following primary operations:
 🛠️ Writing in progress as each stage of the project progresses 🚀
 
 
-### 🔹 [Part 1 — HBnB UML & Design](#)
+### 🔹 [Part 1 — HBnB UML & Design](https://github.com/SG1-Rebecca/holbertonschool-hbnb/tree/main/part1)
 
 | Deliverable | Details |
 |-------------|---------|
