@@ -2,6 +2,7 @@ from app.persistence.repository import InMemoryRepository
 from app.models.user import User
 from app.models.amenity import Amenity
 from app.models.place import Place
+from app.models.review import Review
 
 
 class HBnBFacade:
@@ -9,6 +10,7 @@ class HBnBFacade:
         self.user_repo = InMemoryRepository()
         self.amenity_repo = InMemoryRepository()
         self.place_repo = InMemoryRepository()
+        self.review_repo = InMemoryRepository()
 
     def create_user(self, user_data):
         user = User(**user_data)
@@ -25,7 +27,18 @@ class HBnBFacade:
         return self.user_repo.get_all()
 
     def update_user(self, user_id, user_data):
-        self.user_repo.update(user_id, user_data)
+        user = self.user_repo.get(user_id)
+
+        if not user:
+            return None
+
+        update_data = {}
+        for field in ('first_name', 'last_name', 'email'):
+            if field in user_data:
+                update_data[field] = user_data[field]
+
+        self.user_repo.update(user_id, update_data)
+        return user
 
     #    ====================== AMENITY ===========================
 
@@ -111,3 +124,4 @@ class HBnBFacade:
 
         self.place_repo.update(place_id, update_data)
         return place
+
