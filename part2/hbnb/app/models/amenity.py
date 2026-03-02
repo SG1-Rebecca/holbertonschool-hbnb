@@ -64,3 +64,13 @@ class Amenity(BaseModel):
             'name': self.name,
         })
         return amenity_dict
+
+    def to_dict_public(self):
+        """
+        Return a public dictionary representation of the amenity,
+        excluding timestamps
+        """
+        return {
+            'id': self.id,
+            'name': self.name
+        }

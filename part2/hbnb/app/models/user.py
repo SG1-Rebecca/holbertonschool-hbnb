@@ -98,8 +98,13 @@ class User(BaseModel):
             ValueError: If the email is empty, not a string,
             or has an invalid format
         """
-        if not isinstance(value, str) or not value.strip():
-            raise ValueError("email must be a non-empty string")
+        if not isinstance(value, str):
+            raise TypeError("Email must be a string")
+
+        value = value.strip()
+
+        if not value:
+            raise ValueError("Email cannot be empty")
 
         try:
             email_info = validate_email(value, check_deliverability=False)
@@ -146,3 +151,15 @@ class User(BaseModel):
             "email": self.email,
         })
         return user_dict
+
+    def to_dict_public(self):
+        """
+        Return a public dictionary representation of the user, 
+        excluding timestamps
+        """
+        return {
+            'id': self.id,
+            'first_name': self.first_name,
+            'last_name': self.last_name,
+            'email': self.email
+        }
