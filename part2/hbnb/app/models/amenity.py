@@ -25,7 +25,7 @@ class Amenity(BaseModel):
         Returns:
             str: The name of the amenity
         """
-        return self._name
+        return self.__name
 
     @name.setter
     def name(self, value):
@@ -50,7 +50,7 @@ class Amenity(BaseModel):
         if len(value) > self.NAME_MAX_LENGTH:
             raise ValueError("Name must not exceed 50 characters")
 
-        self._name = value
+        self.__name = value
 
     def to_dict(self):
         """
