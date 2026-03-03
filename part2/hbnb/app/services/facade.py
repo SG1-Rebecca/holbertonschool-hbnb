@@ -43,10 +43,6 @@ class HBnBFacade:
     #    ====================== AMENITY ===========================
 
     def create_amenity(self, amenity_data):
-        existing_amenity = self.amenity_repo.get_by_attribute('name', amenity_data['name'])
-        if existing_amenity:
-            raise ValueError("Amenity already exists")
-
         amenity = Amenity(**amenity_data)
         self.amenity_repo.add(amenity)
         return amenity
@@ -125,3 +121,65 @@ class HBnBFacade:
         self.place_repo.update(place_id, update_data)
         return place
 
+    #    ====================== REVIEW ===========================
+
+    def create_review(self, review_data):
+
+        user = self.user_repo.get(review_data['user_id'])
+        if not user:
+            raise ValueError("user not found")
+
+        place = self.place_repo.get(review_data['place_id'])
+        if not place:
+            raise ValueError("place not found")
+
+        # Check if user already reviewed this place
+        if any(review.user.id == user.id for review in place.reviews):
+            raise ValueError("User already reviewed this place")
+
+        review = Review(
+            text=review_data['text'],
+            rating=review_data['rating'],
+            user=user,
+            place=place
+        )
+
+        place.add_review(review)
+
+        self.review_repo.add(review)
+        return review
+
+    def get_review(self, review_id):
+        return self.review_repo.get(review_id)
+
+    def get_all_reviews(self):
+        return self.review_repo.get_all()
+
+    def get_reviews_by_place(self, place_id):
+        # Fetch reviews for a specific place
+        place = self.place_repo.get(place_id)
+
+        if not place:
+            raise ValueError("Place not found")
+        return place.reviews
+
+    def update_review(self, review_id, review_data):
+        review = self.review_repo.get(review_id)
+
+        if not review:
+            raise ValueError("Review not found")
+
+        if 'text' in review_data:
+            review.text = review_data['text']
+        if 'rating' in review_data:
+            review.rating = review_data['rating']
+
+        self.review_repo.update(review_id, review_data)
+        return review
+
+    def delete_review(self, review_id):
+        review = self.review_repo.get(review_id)
+
+        if not review:
+            raise ValueError("Review not found")
+        self.review_repo.delete(review_id)
