@@ -60,6 +60,56 @@ This tells Python to treat these directories as importable packages.
 - `config.py`: Configuration of environment variables and application settings.
 - `requirements.txt`: List all the Python packages needed for the project.
 
+## Business Logic Layer
+
+The Business Logic Layer handles the core functionality of the HBnB platform through four entities:
+
+### 1. User
+
+Represents a user of the platform, who can be either a property owner or a guest writing reviews.
+
+**Responsibilities:**
+- Store and manage personal information: `first_name`, `last_name`, `email`
+- Manage the `is_admin` flag to distinguish between regular users and administrators
+- Track associated places (properties owned by the user)
+- Track reviews written by the user
+
+
+### 2. Amenity
+
+Represents a feature or service associated with a place (e.g., Wi-Fi, pool, gym, parking).
+
+**Responsibilities:**
+- Store the amenity name with proper validation
+- Associate amenities with multiple places
+- Ensure name is non-empty and within maximum length
+
+
+### 3. Place
+
+Represents a rental property available on the platform.
+
+**Responsibilities:**
+- Store property details: `title`, `description`, `price`, `latitude`, `longitude`
+- Manage the relationship with the property owner (User)
+- Track associated reviews and amenities
+- Enforce data validation for all attributes
+
+
+### 4. Review
+
+Represents a review left by a user for a specific place, including a rating and commentary.
+
+**Responsibilities:**
+- Store review text and rating (1-5 stars)
+- Associate the review with both a place and a user
+- Ensure review text is non-empty and properly formatted
+- Validate that rating is an integer between 1 and 5
+
+**Business Rules:**
+- Users cannot review their own properties
+- Each user can only review a place once
+
 ## Setup I  nstructions
 
 ### 1. Clone and navigate
@@ -113,10 +163,10 @@ pip install --upgrade pip
 - To run all tests from the project root:
 
 ```bash
-python -m unittest discover
+python -m unittest discover -v
 ```
 
 - To display the name of each test and its result
 ```bash
-python3 -m unittest -v tests/filename
+python3 -m unittest app.tests.test_filename -v
 ```
