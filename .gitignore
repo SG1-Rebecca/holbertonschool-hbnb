@@ -1,4 +1,10 @@
-.vscode
-.idea
+# IDE and Editors
+.vscode/
+.idea/
+
 *__pycache__
+
+# Environments
 .venv
+
+# Python 
