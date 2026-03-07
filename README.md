@@ -33,7 +33,7 @@ The application allows users to perform the following primary operations:
 🛠️ Writing in progress as each stage of the project progresses 🚀
 
 
-### 🔹 [Part 1 — HBnB UML & Design](https://github.com/SG1-Rebecca/holbertonschool-hbnb/tree/main/part1)
+### 🔹 [Part 1 — UML & Design](https://github.com/SG1-Rebecca/holbertonschool-hbnb/tree/main/part1)
 
 | Deliverable | Details |
 |-------------|---------|
@@ -43,6 +43,19 @@ The application allows users to perform the following primary operations:
 | 🔗 Entity Relationships | Definition of all model associations |
 
 **This phase ensures a clear and scalable system design before any implementation begins.**
+
+### 🔹 [Part 2 — Business Logic and API Endpoints](https://github.com/SG1-Rebecca/holbertonschool-hbnb/tree/main/part2)
+
+
+| Deliverable | Details |
+|-------------|---------|
+| 🧩 Business Logic | Core models and service layer |
+| 🌐 REST API | Flask endpoints for all resources |
+| 🔁 In-memory Storage | Temporary repository before persistence |
+| 📦 Facade Pattern | Clean separation between layers |
+
+**Status:** Completed — RESTful API with CRUD operations for Users, Places, Reviews, and Amenities.
+
 
 ## 🏗️ Architecture
 
