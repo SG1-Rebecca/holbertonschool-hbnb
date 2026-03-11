@@ -1,12 +1,13 @@
 from app.models.base_model import BaseModel
 from email_validator import validate_email, EmailNotValidError
+from app import bcrypt
 
 
 class User(BaseModel):
     """
     User model that inherits from BaseModel
     """
-    def __init__(self, first_name, last_name, email, is_admin=False):
+    def __init__(self, first_name, last_name, email, password, is_admin=False):
         """
         Initialize new user instance
 
@@ -14,12 +15,14 @@ class User(BaseModel):
             first_name (str): The user's first name
             last_name (str): The user's last name
             email (str): The user's email address
+            password (str): The user's password
             is_admin (bool): User admin status, defaults to False
         """
         super().__init__()
         self.first_name = first_name
         self.last_name = last_name
         self.email = email
+        self.hash_password(password)  # hash the password before storing
         self.is_admin = is_admin
 
     @property
@@ -112,6 +115,33 @@ class User(BaseModel):
         except EmailNotValidError as e:
             raise ValueError(f"Invalid email format: {str(e)}")
 
+    def hash_password(self, password):
+        """
+        Hashes the provided password using bcrypt and stores it.
+
+        Args:
+            password (str): The plaintext password to hash
+        """
+        if not isinstance(password, str) or not password:
+            raise ValueError("Password must be a non-empty string")
+
+        if len(password) < 8:
+            raise ValueError("Password must be at least 8 characters long")
+
+        self.password = bcrypt.generate_password_hash(password).decode('utf-8')
+
+    def verify_password(self, password):
+        """
+        Verifies if the provided password matches the hashed password.
+
+        Args:
+            password (str): The plaintext password to verify
+
+        Returns:
+            bool: True if the password matches, False otherwise
+        """
+        return bcrypt.check_password_hash(self.password, password)
+
     @property
     def is_admin(self):
         """
@@ -154,7 +184,7 @@ class User(BaseModel):
 
     def to_dict_public(self):
         """
-        Return a public dictionary representation of the user, 
+        Return a public dictionary representation of the user,
         excluding timestamps
         """
         return {
