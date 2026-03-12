@@ -32,6 +32,9 @@ class HBnBFacade:
         if not user:
             return None
 
+        if 'password' in user_data:
+            user.hash_password(user_data['password'])
+
         update_data = {}
         for field in ('first_name', 'last_name', 'email'):
             if field in user_data:
