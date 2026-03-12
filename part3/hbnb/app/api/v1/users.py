@@ -32,12 +32,7 @@ class UserList(Resource):
         except (ValueError, TypeError) as e:
             return {'error': str(e)}, 400
 
-        return {
-            'id': new_user.id,
-            'first_name': new_user.first_name,
-            'last_name': new_user.last_name,
-            'email': new_user.email
-        }, 201
+        return {'id': new_user.id}, 201
 
     @api.response(200, 'OK')
     def get(self):
