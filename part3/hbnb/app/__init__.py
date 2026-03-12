@@ -1,8 +1,10 @@
 from flask import Flask
 from flask_restx import Api
 from flask_bcrypt import Bcrypt
+from flask_jwt_extended import JWTManager
 
 bcrypt = Bcrypt()
+jwt = JWTManager()
 
 def create_app(config_class="config.DevelopmentConfig"):
     app = Flask(__name__)
@@ -11,6 +13,7 @@ def create_app(config_class="config.DevelopmentConfig"):
 
     # Initialize extensions
     bcrypt.init_app(app)
+    jwt.init_app(app)
 
     # To avoid circular imports, we import the namespaces here after initializing the app and extensions
     from app.api.v1.users import api as users_ns
