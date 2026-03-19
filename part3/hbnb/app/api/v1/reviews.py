@@ -1,6 +1,6 @@
 from flask_restx import Namespace, Resource, fields
 from app.services import facade
-from flask_jwt_extended import jwt_required, get_jwt_identity
+from flask_jwt_extended import jwt_required, get_jwt_identity, get_jwt
 
 api = Namespace('reviews', description='Review operations')
 
@@ -10,6 +10,11 @@ review_model = api.model('Review', {
     'rating': fields.Integer(required=True, description='Rating of the place (1-5)'),
     'user_id': fields.String(required=True, description='ID of the user'),
     'place_id': fields.String(required=True, description='ID of the place')
+})
+
+review_update_model = api.model('ReviewUpdate', {
+    'text': fields.String(required=True, description='Text of the review'),
+    'rating': fields.Integer(required=True, description='Rating of the place (1-5)'),
 })
 
 
@@ -66,23 +71,28 @@ class ReviewResource(Resource):
             return {'error': 'Review not found'}, 404
         return review.to_dict_public(), 200
 
-    @api.expect(review_model)
+    @api.expect(review_update_model)
     @api.response(200, 'Review updated successfully')
     @api.response(404, 'Review not found')
     @api.response(400, 'Invalid input data')
     @jwt_required()
     def put(self, review_id):
         """Update a review's information"""
-        current_user = get_jwt_identity()
+        current_user = get_jwt()
 
         review_data = api.payload
 
+        is_admin = current_user.get('is_admin', False)
+        user_id = current_user.get('sub')
+
+        print(f"Debug - User ID: {user_id}, Is Admin: {is_admin}")
+
         # Check that the user_id of the review matches the authenticated user.
-        existing_review = facade.get_review(review_id)
-        if not existing_review:
+        review = facade.get_review(review_id)
+        if not review:
             return {'error': 'Review not found'}, 400
 
-        if existing_review.user.id != current_user:
+        if not is_admin and review.user.id != user_id:
             return {'error': 'Unauthorized action.'}, 403
 
         try:
@@ -98,12 +108,19 @@ class ReviewResource(Resource):
     @jwt_required()
     def delete(self, review_id):
         """Delete a review"""
-        current_user = get_jwt_identity()
+        current_user = get_jwt()
+
+        # Set is_admin default to False if not exists
+        is_admin = current_user.get('is_admin', False)
+        user_id = current_user.get('sub')
+
+        print(f"Debug - User ID: {user_id}, Is Admin: {is_admin}")
 
         review = facade.get_review(review_id)
 
+
         # Check that the user_id of the review matches the authenticated user.
-        if review.user.id != current_user:
+        if not is_admin and review.user.id != user_id:
             return {'error': 'Unauthorized action.'}, 403
 
         try:

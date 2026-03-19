@@ -1,7 +1,6 @@
 from flask_restx import Namespace, Resource, fields
 from app.services import facade
-from flask_jwt_extended import jwt_required, get_jwt_identity
-
+from flask_jwt_extended import jwt_required, get_jwt
 
 api = Namespace('users', description='User operations')
 
@@ -26,12 +25,18 @@ class UserList(Resource):
     @api.response(201, 'User successfully created')
     @api.response(400, 'Email already registered')
     @api.response(400, 'Invalid input data')
+    @jwt_required()
     def post(self):
         """Register a new user"""
-        user_data = api.payload
+        current_user = get_jwt()
+        if not current_user.get('is_admin'):
+            return {'error': 'Admin privileges required'}, 403
 
-        existing_user = facade.get_user_by_email(user_data.get('email', ''))
-        if existing_user:
+        user_data = api.payload
+        email = user_data.get('email')
+
+        # Check if email is already in use
+        if facade.get_user_by_email(email):
             return {'error': 'Email already registered'}, 400
 
         try:
@@ -70,16 +75,19 @@ class UserList(Resource):
         @jwt_required()
         def put(self, user_id):
             """Update user details by ID"""
-            current_user = get_jwt_identity()
+            current_user = get_jwt()
 
-            # Check that the user_id in the URL matches the authenticated user.
-            if user_id != current_user:
-                return {'error': 'Unauthorized action.'}, 403
+            if not current_user.get('is_admin'):
+                return {'error': 'Admin privileges required'}, 403
 
             user_data = api.payload
+            email = user_data.get('email')
 
-            if 'email' in user_data or 'password' in user_data:
-                return {'error': 'You cannot modify email or password.'}, 400
+            # Ensure email uniqueness
+            if email:
+                existing_user = facade.get_user_by_email(email)
+                if existing_user and existing_user.id != user_id:
+                    return {'error': 'Email already in use'}, 400
 
             try:
                 update_user = facade.update_user(user_id, user_data)
