@@ -185,4 +185,8 @@ class HBnBFacade:
 
         if not review:
             raise ValueError("Review not found")
+
+        place = review.place
+        place.reviews = [review for review in place.reviews if review.id != review_id]
+
         self.review_repo.delete(review_id)
