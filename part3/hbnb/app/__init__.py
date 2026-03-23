@@ -1,7 +1,11 @@
+import os
+from dotenv import load_dotenv
 from flask import Flask
 from flask_restx import Api
 from flask_bcrypt import Bcrypt
 from flask_jwt_extended import JWTManager
+
+load_dotenv()
 
 bcrypt = Bcrypt()
 jwt = JWTManager()
@@ -37,5 +41,20 @@ def create_app(config_class="config.DevelopmentConfig"):
     api.add_namespace(places_ns, path='/api/v1/places')
     api.add_namespace(reviews_ns, path='/api/v1/reviews')
     api.add_namespace(auth_ns, path='/api/v1/auth')
+
+    with app.app_context():
+        from app.services import facade
+        admin_email = os.getenv('ADMIN_EMAIL')
+        admin_password = os.getenv('ADMIN_PASSWORD')
+
+        if admin_email and admin_password:
+            if not facade.get_user_by_email(admin_email):
+                facade.create_user({
+                    'first_name': 'Admin',
+                    'last_name': 'User',
+                    'email': admin_email,
+                    'password': admin_password,
+                    'is_admin': True
+                })
 
     return app
