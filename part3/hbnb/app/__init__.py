@@ -4,13 +4,11 @@ from flask import Flask
 from flask_restx import Api
 from flask_bcrypt import Bcrypt
 from flask_jwt_extended import JWTManager
-from flask_sqlalchemy import SQLAlchemy
 
 load_dotenv()
 
 bcrypt = Bcrypt()
 jwt = JWTManager()
-db = SQLAlchemy()
 
 authorizations = {
     'Bearer': {
@@ -29,7 +27,6 @@ def create_app(config_class="config.DevelopmentConfig"):
     # Initialize extensions
     bcrypt.init_app(app)
     jwt.init_app(app)
-    db.init_app(app)
 
     # To avoid circular imports, we import the namespaces here after initializing the app and extensions
     from app.api.v1.users import api as users_ns
