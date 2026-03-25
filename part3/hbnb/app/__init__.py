@@ -19,6 +19,7 @@ authorizations = {
     }
 }
 
+
 def create_app(config_class="config.DevelopmentConfig"):
     app = Flask(__name__)
     app.config.from_object(config_class)
@@ -42,19 +43,9 @@ def create_app(config_class="config.DevelopmentConfig"):
     api.add_namespace(reviews_ns, path='/api/v1/reviews')
     api.add_namespace(auth_ns, path='/api/v1/auth')
 
+    # Create admin user
     with app.app_context():
-        from app.services import facade
-        admin_email = os.getenv('ADMIN_EMAIL')
-        admin_password = os.getenv('ADMIN_PASSWORD')
-
-        if admin_email and admin_password:
-            if not facade.get_user_by_email(admin_email):
-                facade.create_user({
-                    'first_name': 'Admin',
-                    'last_name': 'User',
-                    'email': admin_email,
-                    'password': admin_password,
-                    'is_admin': True
-                })
+        from app.utils.admin import create_admin_user
+        create_admin_user()
 
     return app
