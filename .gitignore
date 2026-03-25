@@ -1,10 +1,14 @@
 # IDE and Editors
-.vscode/
-.idea/
+**/.vscode/
+**/.idea/
 
-*__pycache__
+*.pyc
+__pycache__/
 
-# Environments
+# Virtual environments
 .venv
 
-# Python 
+# Environments variable
+.env
+
+# Python
