@@ -1,10 +1,14 @@
 import os
 from app.services import facade
 
+
 def create_admin_user():
     """
-    Create an admin user
-    :return:
+    Create an admin user in the system if it doesn't exist
+
+    Environment variables:
+        ADMIN_EMAIL (str): The email address for the admin user
+        ADMIN_PASSWORD (str): The password for the admin user
     """
     admin_email = os.getenv('ADMIN_EMAIL')
     admin_password = os.getenv('ADMIN_PASSWORD')
@@ -22,4 +26,4 @@ def create_admin_user():
         else:
             print(f'Admin user {admin_email} already exists')
     else:
-        print(f'Admin user {admin_email} does not exist')
+        print('Admin credentials not found in environment variables')
