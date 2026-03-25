@@ -83,10 +83,11 @@ class PlaceResource(Resource):
     def put(self, place_id):
         """Update a place's information"""
         current_user = get_jwt()
+        print(f" PUT debug : {current_user}")
 
         # Set is_admin default to False if not exists
         is_admin = current_user.get('is_admin', False)
-        user_id = current_user.get('sub')
+        user_id = get_jwt_identity()
 
         print(f"Debug - User ID: {user_id}, Is Admin: {is_admin}")
 
