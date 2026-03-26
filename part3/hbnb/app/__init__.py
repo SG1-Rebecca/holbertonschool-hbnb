@@ -6,6 +6,7 @@ from flask_bcrypt import Bcrypt
 from flask_jwt_extended import JWTManager
 from flask_sqlalchemy import SQLAlchemy
 
+# Load environment variables from .env file
 load_dotenv()
 
 bcrypt = Bcrypt()
@@ -48,6 +49,9 @@ def create_app(config_class="config.DevelopmentConfig"):
 
     # Create admin user
     with app.app_context():
+        from app.models.user import User
+        from app.models.place import Place
+        db.create_all()
         from app.utils.admin import create_admin_user
         create_admin_user()
 

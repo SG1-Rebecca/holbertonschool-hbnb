@@ -1,12 +1,14 @@
-from app.models import User
+from app.models import User, Place
 
 from app.persistence.repository import SQLAlchemyRepository
 from app.services.repositories.user_repository import UserRepository
+from app.services.repositories.place_repository import PlaceRepository
 
 
 class HBnBFacade:
     def __init__(self):
         self.user_repo = UserRepository()
+        self.place_repo = PlaceRepository()
 
     def create_user(self, user_data):
         user = User(**user_data)
