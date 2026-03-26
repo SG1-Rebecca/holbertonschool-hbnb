@@ -1,14 +1,16 @@
 from app.models import User
 
 from app.persistence.repository import SQLAlchemyRepository
+from app.services.repositories.user_repository import UserRepository
 
 
 class HBnBFacade:
     def __init__(self):
-        self.user_repo = SQLAlchemyRepository(User)
+        self.user_repo = UserRepository()
 
     def create_user(self, user_data):
         user = User(**user_data)
+        user.hash_password(user_data['password'])
         self.user_repo.add(user)
         return user
 
