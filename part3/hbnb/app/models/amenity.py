@@ -1,3 +1,4 @@
+from app import db
 from app.models.base_model import BaseModel
 
 
@@ -7,50 +8,9 @@ class Amenity(BaseModel):
     """
     NAME_MAX_LENGTH = 50
 
-    def __init__(self, name):
-        """
-        Initialize new amenity instance
+    __tablename__ = 'amenities'
 
-        Args:
-            name (str): The name of the amenity
-        """
-        super().__init__()
-        self.name = name
-
-    @property
-    def name(self):
-        """
-        Get the name of the amenity
-
-        Returns:
-            str: The name of the amenity
-        """
-        return self.__name
-
-    @name.setter
-    def name(self, value):
-        """
-        Set the name of the amenity
-
-        Args:
-            value (str): The name to set
-
-        Raises:
-            TypeError: If value is not a string
-            ValueError: If value is empty or exceeds maximum length
-        """
-        if not isinstance(value, str):
-            raise TypeError("Name must be a string")
-
-        value = value.strip()
-
-        if not value:
-            raise ValueError("Name cannot be empty")
-
-        if len(value) > self.NAME_MAX_LENGTH:
-            raise ValueError("Name must not exceed 50 characters")
-
-        self.__name = value
+    name = db.Column(db.String(50), nullable=False, unique=True)
 
     def to_dict(self):
         """
