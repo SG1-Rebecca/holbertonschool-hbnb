@@ -6,3 +6,4 @@ flask-jwt-extended
 python-dotenv
 sqlalchemy
 flask-sqlalchemy
+bcrypt
