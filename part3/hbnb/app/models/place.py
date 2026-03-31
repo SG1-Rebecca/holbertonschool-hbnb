@@ -1,8 +1,14 @@
 from app import db
 from app.models.base_model import BaseModel
 from app.models.user import User
-from sqlalchemy.orm import validates
+from sqlalchemy.orm import validates, relationship
 
+# Association table to manage the many-to-many relationship between Place and Amenity.
+place_amenities = (db.Table(
+                            'place_amenities',
+                            db.Column('place_id', db.String, db.ForeignKey('places.id'), primary_key=True),
+                            db.Column('amenity_id', db.String, db.ForeignKey('amenities.id'), primary_key=True)
+                            ))
 
 class Place(BaseModel):
     """
@@ -16,10 +22,17 @@ class Place(BaseModel):
     __tablename__ = 'places'
 
     title = db.Column(db.String(100), nullable=False)
-    description = db.Column(db.String(100), nullable=False)
+    description = db.Column(db.String(500), nullable=False)
     price = db.Column(db.Float, nullable=False)
     latitude = db.Column(db.Float, nullable=False)
     longitude = db.Column(db.Float, nullable=False)
+
+    # Foreign Keys
+    owner_id = db.Column(db.String(36), db.ForeignKey('users.id'), nullable=False)
+
+    # Relationships
+    amenities = relationship('Amenity', secondary=place_amenities, backref='places', lazy='subquery')
+    reviews = relationship('Review', backref='place', lazy=True)
 
 
 
@@ -27,9 +40,6 @@ class Place(BaseModel):
     def validate_price(self, key, value):
         """
         Validate the price of the place
-
-        Returns:
-            float: The place price
         """
         if value < 0:
             raise ValueError("Price should be a non-negative float")
@@ -39,9 +49,6 @@ class Place(BaseModel):
     def validate_latitude(self, key, value):
         """
         Validate the latitude of the place
-
-        Returns:
-            float: The latitude of the place
         """
         if isinstance(value, int):
             value = float(value)
@@ -54,9 +61,6 @@ class Place(BaseModel):
     def validate_longitude(self, key, value):
         """
         Validate the longitude of the place
-
-        Returns:
-            float: The longitude of the place
         """
         if isinstance(value, int):
             value = float(value)
@@ -65,6 +69,13 @@ class Place(BaseModel):
             raise ValueError(f"Longitude must be within the range of {self.MIN_LONGITUDE} to {self.MAX_LONGITUDE}")
 
         return value
+
+    def add_amenity(self, amenity):
+        """
+        Add an amenity to the place
+        """
+        if amenity not in self.amenities:
+            self.amenities.append(amenity)
 
     def to_dict(self):
         """
@@ -95,8 +106,7 @@ class Place(BaseModel):
         return {
             'id': self.id,
             'title': self.title,
-            'latitude': self.latitude,
-            'longitude': self.longitude
+            'price': self.price
         }
 
     def to_dict_detail(self):
@@ -113,6 +123,5 @@ class Place(BaseModel):
             'price': self.price,
             'latitude': self.latitude,
             'longitude': self.longitude,
-            'owner': self.owner.to_dict_public(),
             'amenities': [amenity.to_dict_public() for amenity in self.amenities]
         }

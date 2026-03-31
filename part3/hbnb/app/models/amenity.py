@@ -1,16 +1,33 @@
 from app import db
 from app.models.base_model import BaseModel
-
+from sqlalchemy.orm import validates
 
 class Amenity(BaseModel):
     """
     Amenity model that inherits from BaseModel
     """
-    NAME_MAX_LENGTH = 50
 
     __tablename__ = 'amenities'
 
     name = db.Column(db.String(50), nullable=False, unique=True)
+
+    @validates('name')
+    def validate_name(self, key, name):
+        """
+        Validate the amenity name
+        """
+        if not isinstance(name, str):
+            raise ValueError('Amenity name must be a string')
+
+        name = name.strip()
+
+        if not name:
+            raise ValueError('Amenity name cannot be empty')
+
+        if len(name) > 50:
+            raise ValueError('Amenity name must not exceed 50 characters')
+
+        return name.lower()
 
     def to_dict(self):
         """

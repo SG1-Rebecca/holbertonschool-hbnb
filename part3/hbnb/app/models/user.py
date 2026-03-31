@@ -2,7 +2,7 @@ from app import db, bcrypt
 import uuid
 from app.models.base_model import BaseModel
 from email_validator import validate_email, EmailNotValidError
-from sqlalchemy.orm import validates
+from sqlalchemy.orm import validates, relationship
 
 
 class User(BaseModel):
@@ -17,6 +17,9 @@ class User(BaseModel):
     password = db.Column(db.String(128), nullable=False)
     is_admin = db.Column(db.Boolean, default=False)
 
+    # Relationships
+    places = relationship('Place', backref='owner', lazy=True)
+    reviews = relationship('Review', backref='user', lazy=True)
 
     @validates('email')
     def validate_user_email(self, key, value):

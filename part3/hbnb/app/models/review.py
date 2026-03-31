@@ -17,6 +17,9 @@ class Review(BaseModel):
     text = db.Column(db.String(500), nullable=False)
     rating = db.Column(db.Integer, nullable=False)
 
+    # Foreign Keys
+    place_id = db.Column(db.String(36), db.ForeignKey('places.id'), nullable=False)
+    user_id = db.Column(db.String(36), db.ForeignKey('users.id'), nullable=False)
 
     @validates('rating')
     def validate_rating(self, key, value):
