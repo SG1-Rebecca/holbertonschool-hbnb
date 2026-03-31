@@ -49,6 +49,10 @@ class HBnBFacade:
     #    ====================== AMENITY ===========================
 
     def create_amenity(self, amenity_data):
+        existing_amenity = self.amenity_repo.get_amenity_by_name(amenity_data['name'])
+        if existing_amenity:
+            raise ValueError(f'{amenity_data["name"]} already exists!')
+
         amenity = Amenity(**amenity_data)
         self.amenity_repo.add(amenity)
         return amenity
@@ -150,7 +154,7 @@ class HBnBFacade:
             place=place
         )
 
-        place.add_review(review)
+        place.reviews.append(review)
 
         self.review_repo.add(review)
         return review
