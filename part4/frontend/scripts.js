@@ -6,6 +6,8 @@ const API_BASE_URL = 'http://127.0.0.1:5000';
 
 document.addEventListener('DOMContentLoaded', () => {
   const loginForm = document.getElementById('login-form');
+  const reviewForm = document.getElementById('review-form');
+  const placeId = getPlaceIdFromURL();
 
   // Form Submission
   if (loginForm) {
@@ -48,6 +50,54 @@ document.addEventListener('DOMContentLoaded', () => {
       await loginUser(email, password);
     });
   }
+  // Review Form Submission
+  if (reviewForm) {
+    const token = checkAuthentication();
+    const placeId = getPlaceIdFromURL();
+
+    reviewForm.addEventListener('submit', async (event) => {
+      event.preventDefault();
+      // Get review text from form
+      const formData = new FormData(reviewForm);
+      const data = Object.fromEntries(formData);
+      console.log(data);
+
+      // Make AJAX request to submit review
+      async function submitReview (reviewText) {
+        const token = getCookie('token');
+        const placeId = getPlaceIdFromURL();
+        const url = `${API_BASE_URL}/api/v1/places/${placeId}/reviews`;
+
+        try {
+          const response = await fetch(url, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              Authorization: `Bearer ${token}`
+            },
+            body: JSON.stringify(data)
+          });
+
+          // Handle the response
+          if (response.ok) {
+            alert('Review submitted successfully!');
+            reviewForm.reset(); // Clear the form after successful submission
+          } else {
+            const errorData = await response.json();
+            alert('Failed to submit review: ' + (errorData.message || response.statusText));
+          }
+        } catch (error) {
+          console.error('Error:', error);
+          alert('An error occurred while submitting the review. Please try again.');
+        }
+      }
+
+      // Call the submitReview function with the review text
+      await submitReview(reviewText);
+      // handle the response
+      handleResponse(response, reviewForm);
+    });
+  }
   populatePriceFilter();
   displayPlaces(mockPlaces);
   checkAuthentication();
@@ -85,6 +135,12 @@ function checkAuthentication () {
       }
     }
   }
+
+  // ===== ADD REVIEW =====
+  if (!token) {
+    window.location.href = 'index.html';
+  }
+  return token;
 }
 
 function getCookie (name) {
@@ -148,20 +204,20 @@ function populatePriceFilter () {
 
 // ===== MOCK DATA =====
 const mockPlaces = [
-  { id: 1, name: 'Cozy Cottage', price: 50 },
-  { id: 2, name: 'Modern Apartment', price: 100 },
-  { id: 3, name: 'Beach House', price: 150 }
+  { id: 1, title: 'Cozy Cottage', price: 50 },
+  { id: 2, title: 'Modern Apartment', price: 100 },
+  { id: 3, title: 'Beach House', price: 150 }
 ];
 
 const mockPlaceDetails = {
   id: 1,
-  name: 'Beautiful Beach House',
+  title: 'Beautiful Beach House',
   price: 150,
   description: 'A beautiful beach house with amazing views...',
   amenities: ['WiFi', 'Pool', 'Air Conditioning'],
   reviews: [
-    { user: 'Jane Smith', comment: 'Great place to stay!' },
-    { user: 'Robert Brown', comment: 'Amazing location and very comfortable.' }
+    { user: 'Jane Smith', text: 'Great place to stay!' },
+    { user: 'Robert Brown', text: 'Amazing location and very comfortable.' }
   ]
 };
 
@@ -283,5 +339,38 @@ function displayPlaceDetails (place) {
     placeDetailsSection.appendChild(reviews);
   } else {
     console.error('Place details section not found');
+  }
+}
+
+// ===== ADD REVIEW =====
+
+async function submitReview (token, placeId, reviewText) {
+  // Make a POST request to submit review data
+  const url = `${API_BASE_URL}/api/v1/places/${placeId}/reviews`;
+  // Include the token in the Authorization header
+  try {
+    const response = await fetch(url, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`
+      },
+      body: JSON.stringify({ comment: reviewText })
+    });
+    // Send placeId and reviewText in the request body
+    // Handle the response
+    return response;
+  } catch (error) {
+    console.error('Error submitting review:', error);
+    throw error;
+  }
+}
+
+function handleResponse (response) {
+  if (response.ok) {
+    alert('Review submitted successfully!');
+    // Clear the form
+  } else {
+    alert('Failed to submit review');
   }
 }

@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<header>
+    <img src="images/logo.png" alt="logo" class="logo">
+    <nav>
+        <a href="login.html">Login</a>
+    </nav>
+</header>
+
+<main>
+    <form id="login-form" class="form">
+        <div class="form-header">
+            <h2>Login</h2>
+            <img src="images/icon.png" alt="icon-hbnb">
+        </div>
+
+        <label for="email">Email:</label>
+        <input type="email" id="email" name="email" placeholder="your@email.com" required>
+
+        <label for="password">Password:</label>
+        <input type="password" id="password" name="password" placeholder="************" required>
+
+        <button type="submit">Login</button>
+
+        <!-- ✅ message element added -->
+        <p id="message"></p>
+    </form>
+</main>
+
+<footer>
+    <p>&copy; 2026 HBnB. All rights reserved</p>
+</footer>
+
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+  const form = document.getElementById('login-form');
+  const message = document.getElementById('message');
+
+  // Identifiants de test
+  const testEmail = "test@example.com";
+  const testPassword = "test123";
+
+  form.addEventListener('submit', (event) => {
+    event.preventDefault();
+
+    const email = document.getElementById('email').value;
+    const password = document.getElementById('password').value;
+
+    if (email === testEmail && password === testPassword) {
+      message.textContent = "✅ Login successful!";
+      message.style.color = "green";
+      console.log("Login réussi avec:", email);
+      window.location.href = 'index.html'; // Redirection vers la page d'accueil
+    } else {
+      message.textContent = "❌ Invalid email or password.";
+      message.style.color = "red";
+      console.error("Login échoué. Attendu:", testEmail, "/", testPassword);
+    }
+  });
+});
+</script>
+
+</body>
+</html>
