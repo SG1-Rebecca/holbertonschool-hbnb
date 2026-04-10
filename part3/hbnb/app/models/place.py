@@ -106,7 +106,8 @@ class Place(BaseModel):
         return {
             'id': self.id,
             'title': self.title,
-            'price': self.price
+            'price': self.price,
+            'owner': self.owner.id if self.owner else None,
         }
 
     def to_dict_detail(self):
@@ -123,5 +124,6 @@ class Place(BaseModel):
             'price': self.price,
             'latitude': self.latitude,
             'longitude': self.longitude,
+            'owner': self.owner.to_dict_public() if self.owner else None,
             'amenities': [amenity.to_dict_public() for amenity in self.amenities]
         }
