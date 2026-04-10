@@ -1,10 +1,11 @@
 import os
 from dotenv import load_dotenv
-from flask import Flask
+from flask import Flask, render_template, request
 from flask_restx import Api
 from flask_bcrypt import Bcrypt
 from flask_jwt_extended import JWTManager
 from flask_sqlalchemy import SQLAlchemy
+from flask_cors import CORS
 
 # Load environment variables from .env file
 load_dotenv()
@@ -26,6 +27,32 @@ authorizations = {
 def create_app(config_class="config.DevelopmentConfig"):
     app = Flask(__name__)
     app.config.from_object(config_class)
+    # Set up CORS with allowed origins 
+    allowed_origins = ['http://127.0.0.1:5000',
+                       'http://localhost:5000',
+                       'http://127.0.0.1:5500',
+                       'http://localhost:5500'
+                       ]
+    CORS(app, origins=allowed_origins, supports_credentials=True)
+
+    @app.route("/")
+    def index():
+      return render_template("index.html")
+
+    @app.route("/login")
+    def login():
+      return render_template("login.html")
+    
+    @app.route("/place")
+    def place():
+      place_id = request.args.get('id')
+      return render_template("place.html", place_id=place_id)
+    
+    @app.route("/review")
+    def review():
+      place_id = request.args.get('id')
+      return render_template("add_review.html", place_id=place_id)
+
     api = Api(app, version='1.0', title='HBnB API', description='HBnB Application API', doc='/api/v1/', authorizations=authorizations, security='Bearer')
 
     # Initialize extensions
@@ -56,5 +83,6 @@ def create_app(config_class="config.DevelopmentConfig"):
         db.create_all()
         from app.utils.admin import create_admin_user
         create_admin_user()
+
 
     return app
